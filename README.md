@@ -13,7 +13,7 @@ npm install rollup-plugin-import-cdn
 ## Usage
 
 ```js
-import importCdn from "rollup-plugin-import-cdn";
+import { importCdn } from "rollup-plugin-import-cdn";
 
 export default {
     plugins: [importCdn()],
