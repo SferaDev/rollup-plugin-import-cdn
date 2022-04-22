@@ -1,11 +1,11 @@
 import { Plugin as RollupPlugin } from "rollup";
-import { loadHook } from "./load";
+import { loadHook, resolveDependency } from "./load";
 import type { PluginOptions } from "./types";
 import { PartialBy } from "./utils";
 
 export function importCdn(pluginOptions: PartialBy<PluginOptions, "fetchImpl"> = {}): RollupPlugin {
-    const fetchImpl = typeof fetch !== "undefined" ? fetch : pluginOptions.fetchImpl;
-    console.log(fetchImpl);
+    const globalFetch = typeof fetch !== "undefined" ? fetch : undefined;
+    const fetchImpl = pluginOptions.fetchImpl ?? globalFetch;
     if (!fetchImpl) {
         throw new Error(`A fetch implementation is required for plugin-import-cdn to work.`);
     }
@@ -15,7 +15,8 @@ export function importCdn(pluginOptions: PartialBy<PluginOptions, "fetchImpl"> =
     return {
         name: "plugin-import-cdn",
         async resolveId(key: string) {
-            return key;
+            const dependency = await resolveDependency(key, options);
+            return dependency?.name;
         },
         async load(key: string) {
             return loadHook(key, options);

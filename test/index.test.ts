@@ -23,13 +23,17 @@ const serverResponse: RequestListener = (req, res) => {
     }
 };
 
-const bundle = async (code: string, options?: Omit<PluginOptions, "fetchImpl">) => {
+const bundle = async (
+    code: string,
+    { extraFiles, ...options }: Omit<PluginOptions, "fetchImpl"> & { extraFiles?: Record<string, string> } = {}
+) => {
     const bundle = await rollup({
         input: "file:///index.js",
         plugins: [
             importCdn({ ...options, fetchImpl: fetch }),
             virtualFs({
                 files: {
+                    ...(extraFiles ?? {}),
                     "/index.js": ts.transpile(code, { target: ts.ScriptTarget.ES2020 }),
                 },
             }),
@@ -48,48 +52,7 @@ test("Load from remote url", async () => {
     `);
     server.close();
 
-    expect(output).toMatchInlineSnapshot(`
-      [
-        {
-          "code": "const message = \\"Hello world!\\";
-      
-      console.log(message);
-      ",
-          "dynamicImports": [],
-          "exports": [],
-          "facadeModuleId": "file:///index.js",
-          "fileName": "index.js",
-          "implicitlyLoadedBefore": [],
-          "importedBindings": {},
-          "imports": [],
-          "isDynamicEntry": false,
-          "isEntry": true,
-          "isImplicitEntry": false,
-          "map": null,
-          "modules": {
-            "file:///index.js": {
-              "code": "console.log(message);",
-              "originalLength": 71,
-              "removedExports": [],
-              "renderedExports": [],
-              "renderedLength": 21,
-            },
-            "http://localhost:8080/sub.js": {
-              "code": "const message = \\"Hello world!\\";",
-              "originalLength": 37,
-              "removedExports": [],
-              "renderedExports": [
-                "message",
-              ],
-              "renderedLength": 31,
-            },
-          },
-          "name": "index",
-          "referencedFiles": [],
-          "type": "chunk",
-        },
-      ]
-    `);
+    expect(output).toMatchSnapshot();
 }, 30000);
 
 test("Load from package", async () => {
@@ -103,46 +66,38 @@ test("Load from package", async () => {
     );
     server.close();
 
-    expect(output).toMatchInlineSnapshot(`
-      [
+    expect(output).toMatchSnapshot();
+}, 30000);
+
+test("Load from package", async () => {
+    const server = await buildServer(serverResponse, 8080);
+    const output = await bundle(
+        `
+            import { message } from "./foo.js";
+            console.log(message);
+        `,
         {
-          "code": "const message = \\"Hello world!\\";
-      
-      console.log(message);
-      ",
-          "dynamicImports": [],
-          "exports": [],
-          "facadeModuleId": "file:///index.js",
-          "fileName": "index.js",
-          "implicitlyLoadedBefore": [],
-          "importedBindings": {},
-          "imports": [],
-          "isDynamicEntry": false,
-          "isEntry": true,
-          "isImplicitEntry": false,
-          "map": null,
-          "modules": {
-            "file:///index.js": {
-              "code": "console.log(message);",
-              "originalLength": 53,
-              "removedExports": [],
-              "renderedExports": [],
-              "renderedLength": 21,
+            priority: [() => "http://localhost:8080"],
+            extraFiles: {
+                "/foo.js": `
+                              export { message } from "foo";
+                           `,
             },
-            "http://localhost:8080/sub.js": {
-              "code": "const message = \\"Hello world!\\";",
-              "originalLength": 37,
-              "removedExports": [],
-              "renderedExports": [
-                "message",
-              ],
-              "renderedLength": 31,
-            },
-          },
-          "name": "index",
-          "referencedFiles": [],
-          "type": "chunk",
-        },
-      ]
-    `);
+        }
+    );
+    server.close();
+
+    expect(output).toMatchSnapshot();
+}, 30000);
+
+test("Load from real package (skypack)", async () => {
+    const output = await bundle(
+        `
+            import { BaseClient } from "@xata.io/client";
+            console.log(BaseClient);
+        `,
+        { priority: ["skypack"] }
+    );
+
+    expect(output).toMatchSnapshot();
 }, 30000);

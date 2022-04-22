@@ -1,0 +1,3133 @@
+// Vitest Snapshot v1
+
+exports[`Load from package 1`] = `
+[
+  {
+    "code": "const message = \\"Hello world!\\";
+
+console.log(message);
+",
+    "dynamicImports": [],
+    "exports": [],
+    "facadeModuleId": "/index.js",
+    "fileName": "index.js",
+    "implicitlyLoadedBefore": [],
+    "importedBindings": {},
+    "imports": [],
+    "isDynamicEntry": false,
+    "isEntry": true,
+    "isImplicitEntry": false,
+    "map": null,
+    "modules": {
+      "/index.js": {
+        "code": "console.log(message);",
+        "originalLength": 53,
+        "removedExports": [],
+        "renderedExports": [],
+        "renderedLength": 21,
+      },
+      "http://localhost:8080/sub.js": {
+        "code": "const message = \\"Hello world!\\";",
+        "originalLength": 37,
+        "removedExports": [],
+        "renderedExports": [
+          "message",
+        ],
+        "renderedLength": 31,
+      },
+    },
+    "name": "index",
+    "referencedFiles": [],
+    "type": "chunk",
+  },
+]
+`;
+
+exports[`Load from package 2`] = `
+[
+  {
+    "code": "const message = \\"Hello world!\\";
+
+console.log(message);
+",
+    "dynamicImports": [],
+    "exports": [],
+    "facadeModuleId": "/index.js",
+    "fileName": "index.js",
+    "implicitlyLoadedBefore": [],
+    "importedBindings": {},
+    "imports": [],
+    "isDynamicEntry": false,
+    "isEntry": true,
+    "isImplicitEntry": false,
+    "map": null,
+    "modules": {
+      "/index.js": {
+        "code": "console.log(message);",
+        "originalLength": 58,
+        "removedExports": [],
+        "renderedExports": [],
+        "renderedLength": 21,
+      },
+      "http://localhost:8080/sub.js": {
+        "code": "const message = \\"Hello world!\\";",
+        "originalLength": 37,
+        "removedExports": [],
+        "renderedExports": [
+          "message",
+        ],
+        "renderedLength": 31,
+      },
+    },
+    "name": "index",
+    "referencedFiles": [],
+    "type": "chunk",
+  },
+]
+`;
+
+exports[`Load from real package (skypack) 1`] = `
+[
+  {
+    "code": "var commonjsGlobal = typeof globalThis !== \\"undefined\\" ? globalThis : typeof window !== \\"undefined\\" ? window : typeof global !== \\"undefined\\" ? global : typeof self !== \\"undefined\\" ? self : {};
+function createCommonjsModule(fn, basedir, module) {
+  return module = {
+    path: basedir,
+    exports: {},
+    require: function(path, base) {
+      return commonjsRequire(path, base === void 0 || base === null ? module.path : base);
+    }
+  }, fn(module, module.exports), module.exports;
+}
+function commonjsRequire() {
+  throw new Error(\\"Dynamic requires are not currently supported by @rollup/plugin-commonjs\\");
+}
+var fetcher = createCommonjsModule(function(module, exports) {
+  var __awaiter = commonjsGlobal && commonjsGlobal.__awaiter || function(thisArg, _arguments, P, generator) {
+    function adopt(value) {
+      return value instanceof P ? value : new P(function(resolve) {
+        resolve(value);
+      });
+    }
+    return new (P || (P = Promise))(function(resolve, reject) {
+      function fulfilled(value) {
+        try {
+          step(generator.next(value));
+        } catch (e) {
+          reject(e);
+        }
+      }
+      function rejected(value) {
+        try {
+          step(generator[\\"throw\\"](value));
+        } catch (e) {
+          reject(e);
+        }
+      }
+      function step(result) {
+        result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+      }
+      step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+  };
+  Object.defineProperty(exports, \\"__esModule\\", {value: true});
+  exports.fetch = void 0;
+  const resolveUrl = (url, queryParams = {}, pathParams = {}) => {
+    const query2 = new URLSearchParams(queryParams).toString();
+    const queryString = query2.length > 0 ? \`?\${query2}\` : \\"\\";
+    return url.replace(/\\\\{\\\\w*\\\\}/g, (key) => pathParams[key.slice(1, -1)]) + queryString;
+  };
+  const fallbackError = {message: \\"Network response was not ok\\"};
+  function buildBaseUrl({path, workspacesApiUrl, apiUrl, pathParams}) {
+    if (!(pathParams === null || pathParams === void 0 ? void 0 : pathParams.workspace))
+      return \`\${apiUrl}\${path}\`;
+    const url = typeof workspacesApiUrl === \\"string\\" ? \`\${workspacesApiUrl}\${path}\` : workspacesApiUrl(path, pathParams);
+    return url.replace(\\"{workspaceId}\\", pathParams.workspace);
+  }
+  function hostHeader(url) {
+    var _a;
+    const pattern2 = /.*:\\\\/\\\\/(?<host>[^/]+).*/;
+    const {groups} = (_a = pattern2.exec(url)) !== null && _a !== void 0 ? _a : {};
+    return (groups === null || groups === void 0 ? void 0 : groups.host) ? {Host: groups.host} : {};
+  }
+  function fetch2({url: path, method, body, headers, pathParams, queryParams, fetchImpl, apiKey, apiUrl, workspacesApiUrl}) {
+    return __awaiter(this, void 0, void 0, function* () {
+      const baseUrl = buildBaseUrl({path, workspacesApiUrl, pathParams, apiUrl});
+      const fullUrl = resolveUrl(baseUrl, queryParams, pathParams);
+      const url = fullUrl.includes(\\"localhost\\") ? fullUrl.replace(/^[^.]+\\\\./, \\"http://\\") : fullUrl;
+      const response = yield fetchImpl(url, {
+        method: method.toUpperCase(),
+        body: body ? JSON.stringify(body) : void 0,
+        headers: Object.assign(Object.assign(Object.assign({\\"Content-Type\\": \\"application/json\\"}, headers), hostHeader(fullUrl)), {Authorization: \`Bearer \${apiKey}\`})
+      });
+      if (response.status === 204) {
+        return {};
+      }
+      try {
+        const jsonResponse = yield response.json();
+        if (response.ok) {
+          return jsonResponse;
+        }
+        if (jsonResponse.message) {
+          throw withStatus({message: jsonResponse.message}, response.status);
+        } else {
+          throw withStatus(fallbackError, response.status);
+        }
+      } catch (e) {
+        if (e instanceof Error) {
+          const error = {
+            message: e.message
+          };
+          throw withStatus(error, response.status);
+        } else if (typeof e === \\"object\\" && typeof e.message === \\"string\\") {
+          throw withStatus(e, response.status);
+        } else {
+          throw withStatus(fallbackError, response.status);
+        }
+      }
+    });
+  }
+  exports.fetch = fetch2;
+  const withStatus = (error, status) => Object.assign(Object.assign({}, error), {status});
+});
+var components = createCommonjsModule(function(module, exports) {
+  Object.defineProperty(exports, \\"__esModule\\", {value: true});
+  exports.searchBranch = exports.queryTable = exports.bulkInsertTableRecords = exports.getRecord = exports.deleteRecord = exports.upsertRecordWithID = exports.updateRecordWithID = exports.insertRecordWithID = exports.insertRecord = exports.updateColumn = exports.deleteColumn = exports.getColumn = exports.addTableColumn = exports.getTableColumns = exports.setTableSchema = exports.getTableSchema = exports.updateTable = exports.deleteTable = exports.createTable = exports.getBranchStats = exports.getBranchMigrationPlan = exports.executeBranchMigrationPlan = exports.getBranchMigrationHistory = exports.getBranchMetadata = exports.updateBranchMetadata = exports.deleteBranch = exports.createBranch = exports.getBranchDetails = exports.deleteDatabase = exports.createDatabase = exports.getBranchList = exports.getDatabaseList = exports.acceptWorkspaceMemberInvite = exports.resendWorkspaceMemberInvite = exports.cancelWorkspaceMemberInvite = exports.inviteWorkspaceMember = exports.removeWorkspaceMember = exports.updateWorkspaceMemberRole = exports.getWorkspaceMembersList = exports.deleteWorkspace = exports.updateWorkspace = exports.getWorkspace = exports.getWorkspacesList = exports.createWorkspace = exports.deleteUserAPIKey = exports.createUserAPIKey = exports.getUserAPIKeys = exports.deleteUser = exports.updateUser = exports.getUser = void 0;
+  exports.operationsByTag = void 0;
+  const getUser2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/user\\", method: \\"get\\"}, variables));
+  exports.getUser = getUser2;
+  const updateUser2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/user\\", method: \\"put\\"}, variables));
+  exports.updateUser = updateUser2;
+  const deleteUser2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/user\\", method: \\"delete\\"}, variables));
+  exports.deleteUser = deleteUser2;
+  const getUserAPIKeys2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/user/keys\\", method: \\"get\\"}, variables));
+  exports.getUserAPIKeys = getUserAPIKeys2;
+  const createUserAPIKey2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/user/keys/{keyName}\\", method: \\"post\\"}, variables));
+  exports.createUserAPIKey = createUserAPIKey2;
+  const deleteUserAPIKey2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/user/keys/{keyName}\\", method: \\"delete\\"}, variables));
+  exports.deleteUserAPIKey = deleteUserAPIKey2;
+  const createWorkspace2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/workspaces\\", method: \\"post\\"}, variables));
+  exports.createWorkspace = createWorkspace2;
+  const getWorkspacesList2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/workspaces\\", method: \\"get\\"}, variables));
+  exports.getWorkspacesList = getWorkspacesList2;
+  const getWorkspace2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/workspaces/{workspaceId}\\", method: \\"get\\"}, variables));
+  exports.getWorkspace = getWorkspace2;
+  const updateWorkspace2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/workspaces/{workspaceId}\\", method: \\"put\\"}, variables));
+  exports.updateWorkspace = updateWorkspace2;
+  const deleteWorkspace2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/workspaces/{workspaceId}\\", method: \\"delete\\"}, variables));
+  exports.deleteWorkspace = deleteWorkspace2;
+  const getWorkspaceMembersList2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/workspaces/{workspaceId}/members\\", method: \\"get\\"}, variables));
+  exports.getWorkspaceMembersList = getWorkspaceMembersList2;
+  const updateWorkspaceMemberRole2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/workspaces/{workspaceId}/members/{userId}\\", method: \\"put\\"}, variables));
+  exports.updateWorkspaceMemberRole = updateWorkspaceMemberRole2;
+  const removeWorkspaceMember2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/workspaces/{workspaceId}/members/{userId}\\", method: \\"delete\\"}, variables));
+  exports.removeWorkspaceMember = removeWorkspaceMember2;
+  const inviteWorkspaceMember2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/workspaces/{workspaceId}/invites\\", method: \\"post\\"}, variables));
+  exports.inviteWorkspaceMember = inviteWorkspaceMember2;
+  const cancelWorkspaceMemberInvite2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/workspaces/{workspaceId}/invites/{inviteId}\\", method: \\"delete\\"}, variables));
+  exports.cancelWorkspaceMemberInvite = cancelWorkspaceMemberInvite2;
+  const resendWorkspaceMemberInvite2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/workspaces/{workspaceId}/invites/{inviteId}/resend\\", method: \\"post\\"}, variables));
+  exports.resendWorkspaceMemberInvite = resendWorkspaceMemberInvite2;
+  const acceptWorkspaceMemberInvite2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/workspaces/{workspaceId}/invites/{inviteKey}/accept\\", method: \\"post\\"}, variables));
+  exports.acceptWorkspaceMemberInvite = acceptWorkspaceMemberInvite2;
+  const getDatabaseList2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/dbs\\", method: \\"get\\"}, variables));
+  exports.getDatabaseList = getDatabaseList2;
+  const getBranchList2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/dbs/{dbName}\\", method: \\"get\\"}, variables));
+  exports.getBranchList = getBranchList2;
+  const createDatabase2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/dbs/{dbName}\\", method: \\"put\\"}, variables));
+  exports.createDatabase = createDatabase2;
+  const deleteDatabase2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/dbs/{dbName}\\", method: \\"delete\\"}, variables));
+  exports.deleteDatabase = deleteDatabase2;
+  const getBranchDetails2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/db/{dbBranchName}\\", method: \\"get\\"}, variables));
+  exports.getBranchDetails = getBranchDetails2;
+  const createBranch2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/db/{dbBranchName}\\", method: \\"put\\"}, variables));
+  exports.createBranch = createBranch2;
+  const deleteBranch2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/db/{dbBranchName}\\", method: \\"delete\\"}, variables));
+  exports.deleteBranch = deleteBranch2;
+  const updateBranchMetadata2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/db/{dbBranchName}/metadata\\", method: \\"put\\"}, variables));
+  exports.updateBranchMetadata = updateBranchMetadata2;
+  const getBranchMetadata2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/db/{dbBranchName}/metadata\\", method: \\"get\\"}, variables));
+  exports.getBranchMetadata = getBranchMetadata2;
+  const getBranchMigrationHistory2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/db/{dbBranchName}/migrations\\", method: \\"get\\"}, variables));
+  exports.getBranchMigrationHistory = getBranchMigrationHistory2;
+  const executeBranchMigrationPlan2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/db/{dbBranchName}/migrations/execute\\", method: \\"post\\"}, variables));
+  exports.executeBranchMigrationPlan = executeBranchMigrationPlan2;
+  const getBranchMigrationPlan2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/db/{dbBranchName}/migrations/plan\\", method: \\"post\\"}, variables));
+  exports.getBranchMigrationPlan = getBranchMigrationPlan2;
+  const getBranchStats2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/db/{dbBranchName}/stats\\", method: \\"get\\"}, variables));
+  exports.getBranchStats = getBranchStats2;
+  const createTable2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/db/{dbBranchName}/tables/{tableName}\\", method: \\"put\\"}, variables));
+  exports.createTable = createTable2;
+  const deleteTable2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/db/{dbBranchName}/tables/{tableName}\\", method: \\"delete\\"}, variables));
+  exports.deleteTable = deleteTable2;
+  const updateTable2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/db/{dbBranchName}/tables/{tableName}\\", method: \\"patch\\"}, variables));
+  exports.updateTable = updateTable2;
+  const getTableSchema2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/db/{dbBranchName}/tables/{tableName}/schema\\", method: \\"get\\"}, variables));
+  exports.getTableSchema = getTableSchema2;
+  const setTableSchema2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/db/{dbBranchName}/tables/{tableName}/schema\\", method: \\"put\\"}, variables));
+  exports.setTableSchema = setTableSchema2;
+  const getTableColumns2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/db/{dbBranchName}/tables/{tableName}/columns\\", method: \\"get\\"}, variables));
+  exports.getTableColumns = getTableColumns2;
+  const addTableColumn2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/db/{dbBranchName}/tables/{tableName}/columns\\", method: \\"post\\"}, variables));
+  exports.addTableColumn = addTableColumn2;
+  const getColumn2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/db/{dbBranchName}/tables/{tableName}/columns/{columnName}\\", method: \\"get\\"}, variables));
+  exports.getColumn = getColumn2;
+  const deleteColumn2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/db/{dbBranchName}/tables/{tableName}/columns/{columnName}\\", method: \\"delete\\"}, variables));
+  exports.deleteColumn = deleteColumn2;
+  const updateColumn2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/db/{dbBranchName}/tables/{tableName}/columns/{columnName}\\", method: \\"patch\\"}, variables));
+  exports.updateColumn = updateColumn2;
+  const insertRecord2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/db/{dbBranchName}/tables/{tableName}/data\\", method: \\"post\\"}, variables));
+  exports.insertRecord = insertRecord2;
+  const insertRecordWithID2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/db/{dbBranchName}/tables/{tableName}/data/{recordId}\\", method: \\"put\\"}, variables));
+  exports.insertRecordWithID = insertRecordWithID2;
+  const updateRecordWithID2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/db/{dbBranchName}/tables/{tableName}/data/{recordId}\\", method: \\"patch\\"}, variables));
+  exports.updateRecordWithID = updateRecordWithID2;
+  const upsertRecordWithID2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/db/{dbBranchName}/tables/{tableName}/data/{recordId}\\", method: \\"post\\"}, variables));
+  exports.upsertRecordWithID = upsertRecordWithID2;
+  const deleteRecord2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/db/{dbBranchName}/tables/{tableName}/data/{recordId}\\", method: \\"delete\\"}, variables));
+  exports.deleteRecord = deleteRecord2;
+  const getRecord2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/db/{dbBranchName}/tables/{tableName}/data/{recordId}\\", method: \\"get\\"}, variables));
+  exports.getRecord = getRecord2;
+  const bulkInsertTableRecords2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/db/{dbBranchName}/tables/{tableName}/bulk\\", method: \\"post\\"}, variables));
+  exports.bulkInsertTableRecords = bulkInsertTableRecords2;
+  const queryTable2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/db/{dbBranchName}/tables/{tableName}/query\\", method: \\"post\\"}, variables));
+  exports.queryTable = queryTable2;
+  const searchBranch2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/db/{dbBranchName}/search\\", method: \\"post\\"}, variables));
+  exports.searchBranch = searchBranch2;
+  exports.operationsByTag = {
+    users: {getUser: exports.getUser, updateUser: exports.updateUser, deleteUser: exports.deleteUser, getUserAPIKeys: exports.getUserAPIKeys, createUserAPIKey: exports.createUserAPIKey, deleteUserAPIKey: exports.deleteUserAPIKey},
+    workspaces: {
+      createWorkspace: exports.createWorkspace,
+      getWorkspacesList: exports.getWorkspacesList,
+      getWorkspace: exports.getWorkspace,
+      updateWorkspace: exports.updateWorkspace,
+      deleteWorkspace: exports.deleteWorkspace,
+      getWorkspaceMembersList: exports.getWorkspaceMembersList,
+      updateWorkspaceMemberRole: exports.updateWorkspaceMemberRole,
+      removeWorkspaceMember: exports.removeWorkspaceMember,
+      inviteWorkspaceMember: exports.inviteWorkspaceMember,
+      cancelWorkspaceMemberInvite: exports.cancelWorkspaceMemberInvite,
+      resendWorkspaceMemberInvite: exports.resendWorkspaceMemberInvite,
+      acceptWorkspaceMemberInvite: exports.acceptWorkspaceMemberInvite
+    },
+    database: {getDatabaseList: exports.getDatabaseList, createDatabase: exports.createDatabase, deleteDatabase: exports.deleteDatabase},
+    branch: {
+      getBranchList: exports.getBranchList,
+      getBranchDetails: exports.getBranchDetails,
+      createBranch: exports.createBranch,
+      deleteBranch: exports.deleteBranch,
+      updateBranchMetadata: exports.updateBranchMetadata,
+      getBranchMetadata: exports.getBranchMetadata,
+      getBranchMigrationHistory: exports.getBranchMigrationHistory,
+      executeBranchMigrationPlan: exports.executeBranchMigrationPlan,
+      getBranchMigrationPlan: exports.getBranchMigrationPlan,
+      getBranchStats: exports.getBranchStats
+    },
+    table: {
+      createTable: exports.createTable,
+      deleteTable: exports.deleteTable,
+      updateTable: exports.updateTable,
+      getTableSchema: exports.getTableSchema,
+      setTableSchema: exports.setTableSchema,
+      getTableColumns: exports.getTableColumns,
+      addTableColumn: exports.addTableColumn,
+      getColumn: exports.getColumn,
+      deleteColumn: exports.deleteColumn,
+      updateColumn: exports.updateColumn
+    },
+    records: {
+      insertRecord: exports.insertRecord,
+      insertRecordWithID: exports.insertRecordWithID,
+      updateRecordWithID: exports.updateRecordWithID,
+      upsertRecordWithID: exports.upsertRecordWithID,
+      deleteRecord: exports.deleteRecord,
+      getRecord: exports.getRecord,
+      bulkInsertTableRecords: exports.bulkInsertTableRecords,
+      queryTable: exports.queryTable,
+      searchBranch: exports.searchBranch
+    }
+  };
+});
+var providers_1 = createCommonjsModule(function(module, exports) {
+  Object.defineProperty(exports, \\"__esModule\\", {value: true});
+  exports.getHostUrl = void 0;
+  function getHostUrl(provider, type) {
+    if (isValidAlias(provider)) {
+      return providers[provider][type];
+    } else if (isValidBuilder(provider)) {
+      return provider[type];
+    }
+    throw new Error(\\"Invalid API provider\\");
+  }
+  exports.getHostUrl = getHostUrl;
+  const providers = {
+    production: {
+      main: \\"https://api.xata.io\\",
+      workspaces: \\"https://{workspaceId}.xata.sh\\"
+    },
+    staging: {
+      main: \\"https://staging.xatabase.co\\",
+      workspaces: \\"https://{workspaceId}.staging.xatabase.co\\"
+    }
+  };
+  function isValidAlias(alias) {
+    return typeof alias === \\"string\\" && Object.keys(providers).includes(alias);
+  }
+  function isValidBuilder(builder) {
+    return typeof builder === \\"object\\" && typeof builder.main === \\"string\\" && typeof builder.workspaces === \\"string\\";
+  }
+});
+var client = createCommonjsModule(function(module, exports) {
+  var __classPrivateFieldSet = commonjsGlobal && commonjsGlobal.__classPrivateFieldSet || function(receiver, state, value, kind, f) {
+    if (kind === \\"m\\")
+      throw new TypeError(\\"Private method is not writable\\");
+    if (kind === \\"a\\" && !f)
+      throw new TypeError(\\"Private accessor was defined without a setter\\");
+    if (typeof state === \\"function\\" ? receiver !== state || !f : !state.has(receiver))
+      throw new TypeError(\\"Cannot write private member to an object whose class did not declare it\\");
+    return kind === \\"a\\" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value), value;
+  };
+  var __classPrivateFieldGet = commonjsGlobal && commonjsGlobal.__classPrivateFieldGet || function(receiver, state, kind, f) {
+    if (kind === \\"a\\" && !f)
+      throw new TypeError(\\"Private accessor was defined without a getter\\");
+    if (typeof state === \\"function\\" ? receiver !== state || !f : !state.has(receiver))
+      throw new TypeError(\\"Cannot read private member from an object whose class did not declare it\\");
+    return kind === \\"m\\" ? f : kind === \\"a\\" ? f.call(receiver) : f ? f.value : state.get(receiver);
+  };
+  var _XataApiClient_extraProps;
+  Object.defineProperty(exports, \\"__esModule\\", {value: true});
+  exports.XataApiClient = void 0;
+  class XataApiClient2 {
+    constructor(options) {
+      var _a;
+      _XataApiClient_extraProps.set(this, void 0);
+      const fetchImpl = typeof fetch !== \\"undefined\\" ? fetch : options.fetch;
+      if (!fetchImpl) {
+        throw new Error(\`The \\\\\`fetch\\\\\` option passed to the Xata client is resolving to a falsy value and may not be correctly imported.\`);
+      }
+      const provider = (_a = options.host) !== null && _a !== void 0 ? _a : \\"production\\";
+      __classPrivateFieldSet(this, _XataApiClient_extraProps, {
+        apiUrl: (0, providers_1.getHostUrl)(provider, \\"main\\"),
+        workspacesApiUrl: (0, providers_1.getHostUrl)(provider, \\"workspaces\\"),
+        fetchImpl,
+        apiKey: options.apiKey
+      }, \\"f\\");
+    }
+    get user() {
+      return new UserApi(__classPrivateFieldGet(this, _XataApiClient_extraProps, \\"f\\"));
+    }
+    get workspaces() {
+      return new WorkspaceApi(__classPrivateFieldGet(this, _XataApiClient_extraProps, \\"f\\"));
+    }
+    get databases() {
+      return new DatabaseApi(__classPrivateFieldGet(this, _XataApiClient_extraProps, \\"f\\"));
+    }
+    get branches() {
+      return new BranchApi(__classPrivateFieldGet(this, _XataApiClient_extraProps, \\"f\\"));
+    }
+    get tables() {
+      return new TableApi(__classPrivateFieldGet(this, _XataApiClient_extraProps, \\"f\\"));
+    }
+    get records() {
+      return new RecordsApi(__classPrivateFieldGet(this, _XataApiClient_extraProps, \\"f\\"));
+    }
+  }
+  exports.XataApiClient = XataApiClient2;
+  _XataApiClient_extraProps = new WeakMap();
+  class UserApi {
+    constructor(extraProps) {
+      this.extraProps = extraProps;
+    }
+    getUser() {
+      return components.operationsByTag.users.getUser(Object.assign({}, this.extraProps));
+    }
+    updateUser(user) {
+      return components.operationsByTag.users.updateUser(Object.assign({body: user}, this.extraProps));
+    }
+    deleteUser() {
+      return components.operationsByTag.users.deleteUser(Object.assign({}, this.extraProps));
+    }
+    getUserAPIKeys() {
+      return components.operationsByTag.users.getUserAPIKeys(Object.assign({}, this.extraProps));
+    }
+    createUserAPIKey(keyName) {
+      return components.operationsByTag.users.createUserAPIKey(Object.assign({pathParams: {keyName}}, this.extraProps));
+    }
+    deleteUserAPIKey(keyName) {
+      return components.operationsByTag.users.deleteUserAPIKey(Object.assign({pathParams: {keyName}}, this.extraProps));
+    }
+  }
+  class WorkspaceApi {
+    constructor(extraProps) {
+      this.extraProps = extraProps;
+    }
+    createWorkspace(workspaceMeta) {
+      return components.operationsByTag.workspaces.createWorkspace(Object.assign({body: workspaceMeta}, this.extraProps));
+    }
+    getWorkspacesList() {
+      return components.operationsByTag.workspaces.getWorkspacesList(Object.assign({}, this.extraProps));
+    }
+    getWorkspace(workspaceId) {
+      return components.operationsByTag.workspaces.getWorkspace(Object.assign({pathParams: {workspaceId}}, this.extraProps));
+    }
+    updateWorkspace(workspaceId, workspaceMeta) {
+      return components.operationsByTag.workspaces.updateWorkspace(Object.assign({pathParams: {workspaceId}, body: workspaceMeta}, this.extraProps));
+    }
+    deleteWorkspace(workspaceId) {
+      return components.operationsByTag.workspaces.deleteWorkspace(Object.assign({pathParams: {workspaceId}}, this.extraProps));
+    }
+    getWorkspaceMembersList(workspaceId) {
+      return components.operationsByTag.workspaces.getWorkspaceMembersList(Object.assign({pathParams: {workspaceId}}, this.extraProps));
+    }
+    updateWorkspaceMemberRole(workspaceId, userId, role) {
+      return components.operationsByTag.workspaces.updateWorkspaceMemberRole(Object.assign({pathParams: {workspaceId, userId}, body: {role}}, this.extraProps));
+    }
+    removeWorkspaceMember(workspaceId, userId) {
+      return components.operationsByTag.workspaces.removeWorkspaceMember(Object.assign({pathParams: {workspaceId, userId}}, this.extraProps));
+    }
+    inviteWorkspaceMember(workspaceId, email, role) {
+      return components.operationsByTag.workspaces.inviteWorkspaceMember(Object.assign({pathParams: {workspaceId}, body: {email, role}}, this.extraProps));
+    }
+    cancelWorkspaceMemberInvite(workspaceId, inviteId) {
+      return components.operationsByTag.workspaces.cancelWorkspaceMemberInvite(Object.assign({pathParams: {workspaceId, inviteId}}, this.extraProps));
+    }
+    resendWorkspaceMemberInvite(workspaceId, inviteId) {
+      return components.operationsByTag.workspaces.resendWorkspaceMemberInvite(Object.assign({pathParams: {workspaceId, inviteId}}, this.extraProps));
+    }
+    acceptWorkspaceMemberInvite(workspaceId, inviteKey) {
+      return components.operationsByTag.workspaces.acceptWorkspaceMemberInvite(Object.assign({pathParams: {workspaceId, inviteKey}}, this.extraProps));
+    }
+  }
+  class DatabaseApi {
+    constructor(extraProps) {
+      this.extraProps = extraProps;
+    }
+    getDatabaseList(workspace) {
+      return components.operationsByTag.database.getDatabaseList(Object.assign({pathParams: {workspace}}, this.extraProps));
+    }
+    createDatabase(workspace, dbName, options = {}) {
+      return components.operationsByTag.database.createDatabase(Object.assign({pathParams: {workspace, dbName}, body: options}, this.extraProps));
+    }
+    deleteDatabase(workspace, dbName) {
+      return components.operationsByTag.database.deleteDatabase(Object.assign({pathParams: {workspace, dbName}}, this.extraProps));
+    }
+  }
+  class BranchApi {
+    constructor(extraProps) {
+      this.extraProps = extraProps;
+    }
+    getBranchList(workspace, dbName) {
+      return components.operationsByTag.branch.getBranchList(Object.assign({pathParams: {workspace, dbName}}, this.extraProps));
+    }
+    getBranchDetails(workspace, database, branch) {
+      return components.operationsByTag.branch.getBranchDetails(Object.assign({pathParams: {workspace, dbBranchName: \`\${database}:\${branch}\`}}, this.extraProps));
+    }
+    createBranch(workspace, database, branch, from = \\"\\", options = {}) {
+      return components.operationsByTag.branch.createBranch(Object.assign({pathParams: {workspace, dbBranchName: \`\${database}:\${branch}\`}, queryParams: {from}, body: options}, this.extraProps));
+    }
+    deleteBranch(workspace, database, branch) {
+      return components.operationsByTag.branch.deleteBranch(Object.assign({pathParams: {workspace, dbBranchName: \`\${database}:\${branch}\`}}, this.extraProps));
+    }
+    updateBranchMetadata(workspace, database, branch, metadata = {}) {
+      return components.operationsByTag.branch.updateBranchMetadata(Object.assign({pathParams: {workspace, dbBranchName: \`\${database}:\${branch}\`}, body: metadata}, this.extraProps));
+    }
+    getBranchMetadata(workspace, database, branch) {
+      return components.operationsByTag.branch.getBranchMetadata(Object.assign({pathParams: {workspace, dbBranchName: \`\${database}:\${branch}\`}}, this.extraProps));
+    }
+    getBranchMigrationHistory(workspace, database, branch, options = {}) {
+      return components.operationsByTag.branch.getBranchMigrationHistory(Object.assign({pathParams: {workspace, dbBranchName: \`\${database}:\${branch}\`}, body: options}, this.extraProps));
+    }
+    executeBranchMigrationPlan(workspace, database, branch, migrationPlan) {
+      return components.operationsByTag.branch.executeBranchMigrationPlan(Object.assign({pathParams: {workspace, dbBranchName: \`\${database}:\${branch}\`}, body: migrationPlan}, this.extraProps));
+    }
+    getBranchMigrationPlan(workspace, database, branch, schema2) {
+      return components.operationsByTag.branch.getBranchMigrationPlan(Object.assign({pathParams: {workspace, dbBranchName: \`\${database}:\${branch}\`}, body: schema2}, this.extraProps));
+    }
+    getBranchStats(workspace, database, branch) {
+      return components.operationsByTag.branch.getBranchStats(Object.assign({pathParams: {workspace, dbBranchName: \`\${database}:\${branch}\`}}, this.extraProps));
+    }
+  }
+  class TableApi {
+    constructor(extraProps) {
+      this.extraProps = extraProps;
+    }
+    createTable(workspace, database, branch, tableName) {
+      return components.operationsByTag.table.createTable(Object.assign({pathParams: {workspace, dbBranchName: \`\${database}:\${branch}\`, tableName}}, this.extraProps));
+    }
+    deleteTable(workspace, database, branch, tableName) {
+      return components.operationsByTag.table.deleteTable(Object.assign({pathParams: {workspace, dbBranchName: \`\${database}:\${branch}\`, tableName}}, this.extraProps));
+    }
+    updateTable(workspace, database, branch, tableName, options) {
+      return components.operationsByTag.table.updateTable(Object.assign({pathParams: {workspace, dbBranchName: \`\${database}:\${branch}\`, tableName}, body: options}, this.extraProps));
+    }
+    getTableSchema(workspace, database, branch, tableName) {
+      return components.operationsByTag.table.getTableSchema(Object.assign({pathParams: {workspace, dbBranchName: \`\${database}:\${branch}\`, tableName}}, this.extraProps));
+    }
+    setTableSchema(workspace, database, branch, tableName, options) {
+      return components.operationsByTag.table.setTableSchema(Object.assign({pathParams: {workspace, dbBranchName: \`\${database}:\${branch}\`, tableName}, body: options}, this.extraProps));
+    }
+    getTableColumns(workspace, database, branch, tableName) {
+      return components.operationsByTag.table.getTableColumns(Object.assign({pathParams: {workspace, dbBranchName: \`\${database}:\${branch}\`, tableName}}, this.extraProps));
+    }
+    addTableColumn(workspace, database, branch, tableName, column) {
+      return components.operationsByTag.table.addTableColumn(Object.assign({pathParams: {workspace, dbBranchName: \`\${database}:\${branch}\`, tableName}, body: column}, this.extraProps));
+    }
+    getColumn(workspace, database, branch, tableName, columnName) {
+      return components.operationsByTag.table.getColumn(Object.assign({pathParams: {workspace, dbBranchName: \`\${database}:\${branch}\`, tableName, columnName}}, this.extraProps));
+    }
+    deleteColumn(workspace, database, branch, tableName, columnName) {
+      return components.operationsByTag.table.deleteColumn(Object.assign({pathParams: {workspace, dbBranchName: \`\${database}:\${branch}\`, tableName, columnName}}, this.extraProps));
+    }
+    updateColumn(workspace, database, branch, tableName, columnName, options) {
+      return components.operationsByTag.table.updateColumn(Object.assign({pathParams: {workspace, dbBranchName: \`\${database}:\${branch}\`, tableName, columnName}, body: options}, this.extraProps));
+    }
+  }
+  class RecordsApi {
+    constructor(extraProps) {
+      this.extraProps = extraProps;
+    }
+    insertRecord(workspace, database, branch, tableName, record) {
+      return components.operationsByTag.records.insertRecord(Object.assign({pathParams: {workspace, dbBranchName: \`\${database}:\${branch}\`, tableName}, body: record}, this.extraProps));
+    }
+    insertRecordWithID(workspace, database, branch, tableName, recordId, record, options = {}) {
+      return components.operationsByTag.records.insertRecordWithID(Object.assign({pathParams: {workspace, dbBranchName: \`\${database}:\${branch}\`, tableName, recordId}, queryParams: options, body: record}, this.extraProps));
+    }
+    updateRecordWithID(workspace, database, branch, tableName, recordId, record, options = {}) {
+      return components.operationsByTag.records.updateRecordWithID(Object.assign({pathParams: {workspace, dbBranchName: \`\${database}:\${branch}\`, tableName, recordId}, queryParams: options, body: record}, this.extraProps));
+    }
+    upsertRecordWithID(workspace, database, branch, tableName, recordId, record, options = {}) {
+      return components.operationsByTag.records.upsertRecordWithID(Object.assign({pathParams: {workspace, dbBranchName: \`\${database}:\${branch}\`, tableName, recordId}, queryParams: options, body: record}, this.extraProps));
+    }
+    deleteRecord(workspace, database, branch, tableName, recordId) {
+      return components.operationsByTag.records.deleteRecord(Object.assign({pathParams: {workspace, dbBranchName: \`\${database}:\${branch}\`, tableName, recordId}}, this.extraProps));
+    }
+    getRecord(workspace, database, branch, tableName, recordId, options = {}) {
+      return components.operationsByTag.records.getRecord(Object.assign({pathParams: {workspace, dbBranchName: \`\${database}:\${branch}\`, tableName, recordId}}, this.extraProps));
+    }
+    bulkInsertTableRecords(workspace, database, branch, tableName, records) {
+      return components.operationsByTag.records.bulkInsertTableRecords(Object.assign({pathParams: {workspace, dbBranchName: \`\${database}:\${branch}\`, tableName}, body: {records}}, this.extraProps));
+    }
+    queryTable(workspace, database, branch, tableName, query2) {
+      return components.operationsByTag.records.queryTable(Object.assign({pathParams: {workspace, dbBranchName: \`\${database}:\${branch}\`, tableName}, body: query2}, this.extraProps));
+    }
+    searchBranch(workspace, database, branch, query2) {
+      return components.operationsByTag.records.searchBranch(Object.assign({pathParams: {workspace, dbBranchName: \`\${database}:\${branch}\`}, body: query2}, this.extraProps));
+    }
+  }
+});
+var api = createCommonjsModule(function(module, exports) {
+  var __createBinding = commonjsGlobal && commonjsGlobal.__createBinding || (Object.create ? function(o, m, k, k2) {
+    if (k2 === void 0)
+      k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || (\\"get\\" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = {enumerable: true, get: function() {
+        return m[k];
+      }};
+    }
+    Object.defineProperty(o, k2, desc);
+  } : function(o, m, k, k2) {
+    if (k2 === void 0)
+      k2 = k;
+    o[k2] = m[k];
+  });
+  var __exportStar = commonjsGlobal && commonjsGlobal.__exportStar || function(m, exports2) {
+    for (var p in m)
+      if (p !== \\"default\\" && !Object.prototype.hasOwnProperty.call(exports2, p))
+        __createBinding(exports2, m, p);
+  };
+  Object.defineProperty(exports, \\"__esModule\\", {value: true});
+  exports.Operations = void 0;
+  Object.defineProperty(exports, \\"Operations\\", {enumerable: true, get: function() {
+    return components.operationsByTag;
+  }});
+  __exportStar(client, exports);
+  __exportStar(components, exports);
+});
+var operators = createCommonjsModule(function(module, exports) {
+  Object.defineProperty(exports, \\"__esModule\\", {value: true});
+  exports.includesAll = exports.includesPattern = exports.includesSubstring = exports.includes = exports.contains = exports.isNot = exports.is = exports.pattern = exports.endsWith = exports.startsWith = exports.notExists = exports.exists = exports.le = exports.lte = exports.lt = exports.gte = exports.ge = exports.gt = void 0;
+  const gt2 = (value) => ({$gt: value});
+  exports.gt = gt2;
+  const ge2 = (value) => ({$ge: value});
+  exports.ge = ge2;
+  const gte2 = (value) => ({$ge: value});
+  exports.gte = gte2;
+  const lt2 = (value) => ({$lt: value});
+  exports.lt = lt2;
+  const lte2 = (value) => ({$le: value});
+  exports.lte = lte2;
+  const le2 = (value) => ({$le: value});
+  exports.le = le2;
+  const exists2 = (column) => ({$exists: column});
+  exports.exists = exists2;
+  const notExists2 = (column) => ({$notExists: column});
+  exports.notExists = notExists2;
+  const startsWith2 = (value) => ({$startsWith: value});
+  exports.startsWith = startsWith2;
+  const endsWith2 = (value) => ({$endsWith: value});
+  exports.endsWith = endsWith2;
+  const pattern2 = (value) => ({$pattern: value});
+  exports.pattern = pattern2;
+  const is2 = (value) => ({$is: value});
+  exports.is = is2;
+  const isNot2 = (value) => ({$isNot: value});
+  exports.isNot = isNot2;
+  const contains2 = (value) => ({$contains: value});
+  exports.contains = contains2;
+  const includes2 = (value) => ({$includes: value});
+  exports.includes = includes2;
+  const includesSubstring2 = (value) => ({$includesSubstring: value});
+  exports.includesSubstring = includesSubstring2;
+  const includesPattern2 = (value) => ({$includesPattern: value});
+  exports.includesPattern = includesPattern2;
+  const includesAll2 = (value) => ({$includesAll: value});
+  exports.includesAll = includesAll2;
+});
+var pagination = createCommonjsModule(function(module, exports) {
+  var __awaiter = commonjsGlobal && commonjsGlobal.__awaiter || function(thisArg, _arguments, P, generator) {
+    function adopt(value) {
+      return value instanceof P ? value : new P(function(resolve) {
+        resolve(value);
+      });
+    }
+    return new (P || (P = Promise))(function(resolve, reject) {
+      function fulfilled(value) {
+        try {
+          step(generator.next(value));
+        } catch (e) {
+          reject(e);
+        }
+      }
+      function rejected(value) {
+        try {
+          step(generator[\\"throw\\"](value));
+        } catch (e) {
+          reject(e);
+        }
+      }
+      function step(result) {
+        result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+      }
+      step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+  };
+  var __classPrivateFieldSet = commonjsGlobal && commonjsGlobal.__classPrivateFieldSet || function(receiver, state, value, kind, f) {
+    if (kind === \\"m\\")
+      throw new TypeError(\\"Private method is not writable\\");
+    if (kind === \\"a\\" && !f)
+      throw new TypeError(\\"Private accessor was defined without a setter\\");
+    if (typeof state === \\"function\\" ? receiver !== state || !f : !state.has(receiver))
+      throw new TypeError(\\"Cannot write private member to an object whose class did not declare it\\");
+    return kind === \\"a\\" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value), value;
+  };
+  var __classPrivateFieldGet = commonjsGlobal && commonjsGlobal.__classPrivateFieldGet || function(receiver, state, kind, f) {
+    if (kind === \\"a\\" && !f)
+      throw new TypeError(\\"Private accessor was defined without a getter\\");
+    if (typeof state === \\"function\\" ? receiver !== state || !f : !state.has(receiver))
+      throw new TypeError(\\"Cannot read private member from an object whose class did not declare it\\");
+    return kind === \\"m\\" ? f : kind === \\"a\\" ? f.call(receiver) : f ? f.value : state.get(receiver);
+  };
+  var _Page_query;
+  Object.defineProperty(exports, \\"__esModule\\", {value: true});
+  exports.PAGINATION_DEFAULT_OFFSET = exports.PAGINATION_MAX_OFFSET = exports.PAGINATION_DEFAULT_SIZE = exports.PAGINATION_MAX_SIZE = exports.Page = void 0;
+  class Page2 {
+    constructor(query2, meta, records = []) {
+      _Page_query.set(this, void 0);
+      __classPrivateFieldSet(this, _Page_query, query2, \\"f\\");
+      this.meta = meta;
+      this.records = records;
+    }
+    nextPage(size, offset) {
+      return __awaiter(this, void 0, void 0, function* () {
+        return __classPrivateFieldGet(this, _Page_query, \\"f\\").getPaginated({page: {size, offset, after: this.meta.page.cursor}});
+      });
+    }
+    previousPage(size, offset) {
+      return __awaiter(this, void 0, void 0, function* () {
+        return __classPrivateFieldGet(this, _Page_query, \\"f\\").getPaginated({page: {size, offset, before: this.meta.page.cursor}});
+      });
+    }
+    firstPage(size, offset) {
+      return __awaiter(this, void 0, void 0, function* () {
+        return __classPrivateFieldGet(this, _Page_query, \\"f\\").getPaginated({page: {size, offset, first: this.meta.page.cursor}});
+      });
+    }
+    lastPage(size, offset) {
+      return __awaiter(this, void 0, void 0, function* () {
+        return __classPrivateFieldGet(this, _Page_query, \\"f\\").getPaginated({page: {size, offset, last: this.meta.page.cursor}});
+      });
+    }
+    hasNextPage() {
+      return this.meta.page.more;
+    }
+  }
+  exports.Page = Page2;
+  _Page_query = new WeakMap();
+  exports.PAGINATION_MAX_SIZE = 200;
+  exports.PAGINATION_DEFAULT_SIZE = 200;
+  exports.PAGINATION_MAX_OFFSET = 800;
+  exports.PAGINATION_DEFAULT_OFFSET = 0;
+});
+var lang = createCommonjsModule(function(module, exports) {
+  Object.defineProperty(exports, \\"__esModule\\", {value: true});
+  exports.compact = void 0;
+  function notEmpty(value) {
+    return value !== null && value !== void 0;
+  }
+  function compact(arr) {
+    return arr.filter(notEmpty);
+  }
+  exports.compact = compact;
+});
+var query = createCommonjsModule(function(module, exports) {
+  var __awaiter = commonjsGlobal && commonjsGlobal.__awaiter || function(thisArg, _arguments, P, generator) {
+    function adopt(value) {
+      return value instanceof P ? value : new P(function(resolve) {
+        resolve(value);
+      });
+    }
+    return new (P || (P = Promise))(function(resolve, reject) {
+      function fulfilled(value) {
+        try {
+          step(generator.next(value));
+        } catch (e) {
+          reject(e);
+        }
+      }
+      function rejected(value) {
+        try {
+          step(generator[\\"throw\\"](value));
+        } catch (e) {
+          reject(e);
+        }
+      }
+      function step(result) {
+        result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+      }
+      step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+  };
+  var __classPrivateFieldSet = commonjsGlobal && commonjsGlobal.__classPrivateFieldSet || function(receiver, state, value, kind, f) {
+    if (kind === \\"m\\")
+      throw new TypeError(\\"Private method is not writable\\");
+    if (kind === \\"a\\" && !f)
+      throw new TypeError(\\"Private accessor was defined without a setter\\");
+    if (typeof state === \\"function\\" ? receiver !== state || !f : !state.has(receiver))
+      throw new TypeError(\\"Cannot write private member to an object whose class did not declare it\\");
+    return kind === \\"a\\" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value), value;
+  };
+  var __classPrivateFieldGet = commonjsGlobal && commonjsGlobal.__classPrivateFieldGet || function(receiver, state, kind, f) {
+    if (kind === \\"a\\" && !f)
+      throw new TypeError(\\"Private accessor was defined without a getter\\");
+    if (typeof state === \\"function\\" ? receiver !== state || !f : !state.has(receiver))
+      throw new TypeError(\\"Cannot read private member from an object whose class did not declare it\\");
+    return kind === \\"m\\" ? f : kind === \\"a\\" ? f.call(receiver) : f ? f.value : state.get(receiver);
+  };
+  var __asyncValues = commonjsGlobal && commonjsGlobal.__asyncValues || function(o) {
+    if (!Symbol.asyncIterator)
+      throw new TypeError(\\"Symbol.asyncIterator is not defined.\\");
+    var m = o[Symbol.asyncIterator], i;
+    return m ? m.call(o) : (o = typeof __values === \\"function\\" ? __values(o) : o[Symbol.iterator](), i = {}, verb(\\"next\\"), verb(\\"throw\\"), verb(\\"return\\"), i[Symbol.asyncIterator] = function() {
+      return this;
+    }, i);
+    function verb(n) {
+      i[n] = o[n] && function(v) {
+        return new Promise(function(resolve, reject) {
+          v = o[n](v), settle(resolve, reject, v.done, v.value);
+        });
+      };
+    }
+    function settle(resolve, reject, d, v) {
+      Promise.resolve(v).then(function(v2) {
+        resolve({value: v2, done: d});
+      }, reject);
+    }
+  };
+  var __await = commonjsGlobal && commonjsGlobal.__await || function(v) {
+    return this instanceof __await ? (this.v = v, this) : new __await(v);
+  };
+  var __asyncGenerator = commonjsGlobal && commonjsGlobal.__asyncGenerator || function(thisArg, _arguments, generator) {
+    if (!Symbol.asyncIterator)
+      throw new TypeError(\\"Symbol.asyncIterator is not defined.\\");
+    var g = generator.apply(thisArg, _arguments || []), i, q = [];
+    return i = {}, verb(\\"next\\"), verb(\\"throw\\"), verb(\\"return\\"), i[Symbol.asyncIterator] = function() {
+      return this;
+    }, i;
+    function verb(n) {
+      if (g[n])
+        i[n] = function(v) {
+          return new Promise(function(a, b) {
+            q.push([n, v, a, b]) > 1 || resume(n, v);
+          });
+        };
+    }
+    function resume(n, v) {
+      try {
+        step(g[n](v));
+      } catch (e) {
+        settle(q[0][3], e);
+      }
+    }
+    function step(r) {
+      r.value instanceof __await ? Promise.resolve(r.value.v).then(fulfill, reject) : settle(q[0][2], r);
+    }
+    function fulfill(value) {
+      resume(\\"next\\", value);
+    }
+    function reject(value) {
+      resume(\\"throw\\", value);
+    }
+    function settle(f, v) {
+      if (f(v), q.shift(), q.length)
+        resume(q[0][0], q[0][1]);
+    }
+  };
+  var _Query_table, _Query_repository, _Query_data;
+  Object.defineProperty(exports, \\"__esModule\\", {value: true});
+  exports.Query = void 0;
+  class Query2 {
+    constructor(repository2, table, data, parent) {
+      var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q;
+      _Query_table.set(this, void 0);
+      _Query_repository.set(this, void 0);
+      _Query_data.set(this, {filter: {}});
+      this.meta = {page: {cursor: \\"start\\", more: true}};
+      this.records = [];
+      __classPrivateFieldSet(this, _Query_table, table, \\"f\\");
+      if (repository2) {
+        __classPrivateFieldSet(this, _Query_repository, repository2, \\"f\\");
+      } else {
+        __classPrivateFieldSet(this, _Query_repository, this, \\"f\\");
+      }
+      __classPrivateFieldGet(this, _Query_data, \\"f\\").filter.$any = (_b = (_a = data.filter) === null || _a === void 0 ? void 0 : _a.$any) !== null && _b !== void 0 ? _b : (_c = parent === null || parent === void 0 ? void 0 : parent.filter) === null || _c === void 0 ? void 0 : _c.$any;
+      __classPrivateFieldGet(this, _Query_data, \\"f\\").filter.$all = (_e = (_d = data.filter) === null || _d === void 0 ? void 0 : _d.$all) !== null && _e !== void 0 ? _e : (_f = parent === null || parent === void 0 ? void 0 : parent.filter) === null || _f === void 0 ? void 0 : _f.$all;
+      __classPrivateFieldGet(this, _Query_data, \\"f\\").filter.$not = (_h = (_g = data.filter) === null || _g === void 0 ? void 0 : _g.$not) !== null && _h !== void 0 ? _h : (_j = parent === null || parent === void 0 ? void 0 : parent.filter) === null || _j === void 0 ? void 0 : _j.$not;
+      __classPrivateFieldGet(this, _Query_data, \\"f\\").filter.$none = (_l = (_k = data.filter) === null || _k === void 0 ? void 0 : _k.$none) !== null && _l !== void 0 ? _l : (_m = parent === null || parent === void 0 ? void 0 : parent.filter) === null || _m === void 0 ? void 0 : _m.$none;
+      __classPrivateFieldGet(this, _Query_data, \\"f\\").sort = (_o = data.sort) !== null && _o !== void 0 ? _o : parent === null || parent === void 0 ? void 0 : parent.sort;
+      __classPrivateFieldGet(this, _Query_data, \\"f\\").columns = (_q = (_p = data.columns) !== null && _p !== void 0 ? _p : parent === null || parent === void 0 ? void 0 : parent.columns) !== null && _q !== void 0 ? _q : [\\"*\\"];
+      this.any = this.any.bind(this);
+      this.all = this.all.bind(this);
+      this.not = this.not.bind(this);
+      this.filter = this.filter.bind(this);
+      this.sort = this.sort.bind(this);
+      this.none = this.none.bind(this);
+      Object.defineProperty(this, \\"table\\", {enumerable: false});
+      Object.defineProperty(this, \\"repository\\", {enumerable: false});
+    }
+    getQueryOptions() {
+      return __classPrivateFieldGet(this, _Query_data, \\"f\\");
+    }
+    any(...queries) {
+      const $any = queries.map((query2) => query2.getQueryOptions().filter);
+      return new Query2(__classPrivateFieldGet(this, _Query_repository, \\"f\\"), __classPrivateFieldGet(this, _Query_table, \\"f\\"), {filter: {$any}}, __classPrivateFieldGet(this, _Query_data, \\"f\\"));
+    }
+    all(...queries) {
+      const $all = queries.map((query2) => query2.getQueryOptions().filter);
+      return new Query2(__classPrivateFieldGet(this, _Query_repository, \\"f\\"), __classPrivateFieldGet(this, _Query_table, \\"f\\"), {filter: {$all}}, __classPrivateFieldGet(this, _Query_data, \\"f\\"));
+    }
+    not(...queries) {
+      const $not = queries.map((query2) => query2.getQueryOptions().filter);
+      return new Query2(__classPrivateFieldGet(this, _Query_repository, \\"f\\"), __classPrivateFieldGet(this, _Query_table, \\"f\\"), {filter: {$not}}, __classPrivateFieldGet(this, _Query_data, \\"f\\"));
+    }
+    none(...queries) {
+      const $none = queries.map((query2) => query2.getQueryOptions().filter);
+      return new Query2(__classPrivateFieldGet(this, _Query_repository, \\"f\\"), __classPrivateFieldGet(this, _Query_table, \\"f\\"), {filter: {$none}}, __classPrivateFieldGet(this, _Query_data, \\"f\\"));
+    }
+    filter(a, b) {
+      if (arguments.length === 1) {
+        const constraints = Object.entries(a).map(([column, constraint]) => ({[column]: constraint}));
+        const $all = (0, lang.compact)([__classPrivateFieldGet(this, _Query_data, \\"f\\").filter.$all].flat().concat(constraints));
+        return new Query2(__classPrivateFieldGet(this, _Query_repository, \\"f\\"), __classPrivateFieldGet(this, _Query_table, \\"f\\"), {filter: {$all}}, __classPrivateFieldGet(this, _Query_data, \\"f\\"));
+      } else {
+        const column = a;
+        const value = b;
+        const $all = (0, lang.compact)([__classPrivateFieldGet(this, _Query_data, \\"f\\").filter.$all].flat().concat({[column]: value}));
+        return new Query2(__classPrivateFieldGet(this, _Query_repository, \\"f\\"), __classPrivateFieldGet(this, _Query_table, \\"f\\"), {filter: {$all}}, __classPrivateFieldGet(this, _Query_data, \\"f\\"));
+      }
+    }
+    sort(column, direction) {
+      const sort = Object.assign(Object.assign({}, __classPrivateFieldGet(this, _Query_data, \\"f\\").sort), {[column]: direction});
+      return new Query2(__classPrivateFieldGet(this, _Query_repository, \\"f\\"), __classPrivateFieldGet(this, _Query_table, \\"f\\"), {sort}, __classPrivateFieldGet(this, _Query_data, \\"f\\"));
+    }
+    select(columns) {
+      return new Query2(__classPrivateFieldGet(this, _Query_repository, \\"f\\"), __classPrivateFieldGet(this, _Query_table, \\"f\\"), {columns}, __classPrivateFieldGet(this, _Query_data, \\"f\\"));
+    }
+    getPaginated(options = {}) {
+      return __classPrivateFieldGet(this, _Query_repository, \\"f\\").query(this, options);
+    }
+    [(_Query_table = new WeakMap(), _Query_repository = new WeakMap(), _Query_data = new WeakMap(), Symbol.asyncIterator)]() {
+      return __asyncGenerator(this, arguments, function* _a() {
+        var e_1, _b;
+        try {
+          for (var _c = __asyncValues(this.getIterator(1)), _d; _d = yield __await(_c.next()), !_d.done; ) {
+            const [record] = _d.value;
+            yield yield __await(record);
+          }
+        } catch (e_1_1) {
+          e_1 = {error: e_1_1};
+        } finally {
+          try {
+            if (_d && !_d.done && (_b = _c.return))
+              yield __await(_b.call(_c));
+          } finally {
+            if (e_1)
+              throw e_1.error;
+          }
+        }
+      });
+    }
+    getIterator(chunk, options = {}) {
+      return __asyncGenerator(this, arguments, function* getIterator_1() {
+        let offset = 0;
+        let end = false;
+        while (!end) {
+          const {records, meta} = yield __await(this.getPaginated(Object.assign(Object.assign({}, options), {page: {size: chunk, offset}})));
+          yield yield __await(records);
+          offset += chunk;
+          end = !meta.page.more;
+        }
+      });
+    }
+    getMany(options = {}) {
+      return __awaiter(this, void 0, void 0, function* () {
+        const {records} = yield this.getPaginated(options);
+        return records;
+      });
+    }
+    getAll(chunk = pagination.PAGINATION_MAX_SIZE, options = {}) {
+      var e_2, _a;
+      return __awaiter(this, void 0, void 0, function* () {
+        const results = [];
+        try {
+          for (var _b = __asyncValues(this.getIterator(chunk, options)), _c; _c = yield _b.next(), !_c.done; ) {
+            const page = _c.value;
+            results.push(...page);
+          }
+        } catch (e_2_1) {
+          e_2 = {error: e_2_1};
+        } finally {
+          try {
+            if (_c && !_c.done && (_a = _b.return))
+              yield _a.call(_b);
+          } finally {
+            if (e_2)
+              throw e_2.error;
+          }
+        }
+        return results;
+      });
+    }
+    getOne(options = {}) {
+      return __awaiter(this, void 0, void 0, function* () {
+        const records = yield this.getMany(Object.assign(Object.assign({}, options), {page: {size: 1}}));
+        return records[0] || null;
+      });
+    }
+    nextPage(size, offset) {
+      return this.firstPage(size, offset);
+    }
+    previousPage(size, offset) {
+      return this.firstPage(size, offset);
+    }
+    firstPage(size, offset) {
+      return this.getPaginated({page: {size, offset}});
+    }
+    lastPage(size, offset) {
+      return this.getPaginated({page: {size, offset, before: \\"end\\"}});
+    }
+    hasNextPage() {
+      return this.meta.page.more;
+    }
+  }
+  exports.Query = Query2;
+});
+var filters = createCommonjsModule(function(module, exports) {
+  Object.defineProperty(exports, \\"__esModule\\", {value: true});
+  exports.buildSortFilter = exports.isSortFilterObject = void 0;
+  function isSortFilterObject(filter) {
+    return typeof filter === \\"object\\" && filter.column !== void 0;
+  }
+  exports.isSortFilterObject = isSortFilterObject;
+  function buildSortFilter(filter) {
+    if (!filter)
+      return void 0;
+    const filters2 = Array.isArray(filter) ? filter : [filter];
+    return filters2.reduce((acc, item) => {
+      if (typeof item === \\"string\\") {
+        return Object.assign(Object.assign({}, acc), {[item]: \\"asc\\"});
+      } else if (isSortFilterObject(item)) {
+        return Object.assign(Object.assign({}, acc), {[item.column]: item.direction});
+      } else {
+        return acc;
+      }
+    }, {});
+  }
+  exports.buildSortFilter = buildSortFilter;
+});
+var repository = createCommonjsModule(function(module, exports) {
+  var __awaiter = commonjsGlobal && commonjsGlobal.__awaiter || function(thisArg, _arguments, P, generator) {
+    function adopt(value) {
+      return value instanceof P ? value : new P(function(resolve) {
+        resolve(value);
+      });
+    }
+    return new (P || (P = Promise))(function(resolve, reject) {
+      function fulfilled(value) {
+        try {
+          step(generator.next(value));
+        } catch (e) {
+          reject(e);
+        }
+      }
+      function rejected(value) {
+        try {
+          step(generator[\\"throw\\"](value));
+        } catch (e) {
+          reject(e);
+        }
+      }
+      function step(result) {
+        result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+      }
+      step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+  };
+  var __classPrivateFieldSet = commonjsGlobal && commonjsGlobal.__classPrivateFieldSet || function(receiver, state, value, kind, f) {
+    if (kind === \\"m\\")
+      throw new TypeError(\\"Private method is not writable\\");
+    if (kind === \\"a\\" && !f)
+      throw new TypeError(\\"Private accessor was defined without a setter\\");
+    if (typeof state === \\"function\\" ? receiver !== state || !f : !state.has(receiver))
+      throw new TypeError(\\"Cannot write private member to an object whose class did not declare it\\");
+    return kind === \\"a\\" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value), value;
+  };
+  var __classPrivateFieldGet = commonjsGlobal && commonjsGlobal.__classPrivateFieldGet || function(receiver, state, kind, f) {
+    if (kind === \\"a\\" && !f)
+      throw new TypeError(\\"Private accessor was defined without a getter\\");
+    if (typeof state === \\"function\\" ? receiver !== state || !f : !state.has(receiver))
+      throw new TypeError(\\"Cannot read private member from an object whose class did not declare it\\");
+    return kind === \\"m\\" ? f : kind === \\"a\\" ? f.call(receiver) : f ? f.value : state.get(receiver);
+  };
+  var __asyncValues = commonjsGlobal && commonjsGlobal.__asyncValues || function(o) {
+    if (!Symbol.asyncIterator)
+      throw new TypeError(\\"Symbol.asyncIterator is not defined.\\");
+    var m = o[Symbol.asyncIterator], i;
+    return m ? m.call(o) : (o = typeof __values === \\"function\\" ? __values(o) : o[Symbol.iterator](), i = {}, verb(\\"next\\"), verb(\\"throw\\"), verb(\\"return\\"), i[Symbol.asyncIterator] = function() {
+      return this;
+    }, i);
+    function verb(n) {
+      i[n] = o[n] && function(v) {
+        return new Promise(function(resolve, reject) {
+          v = o[n](v), settle(resolve, reject, v.done, v.value);
+        });
+      };
+    }
+    function settle(resolve, reject, d, v) {
+      Promise.resolve(v).then(function(v2) {
+        resolve({value: v2, done: d});
+      }, reject);
+    }
+  };
+  var _RestRepository_instances, _RestRepository_client, _RestRepository_fetch, _RestRepository_table, _RestRepository_getFetchProps, _BaseClient_links, _BaseClient_branch;
+  Object.defineProperty(exports, \\"__esModule\\", {value: true});
+  exports.BaseClient = exports.RestRespositoryFactory = exports.RestRepository = exports.Repository = void 0;
+  class Repository2 extends query.Query {
+  }
+  exports.Repository = Repository2;
+  class RestRepository2 extends Repository2 {
+    constructor(client2, table) {
+      super(null, table, {});
+      _RestRepository_instances.add(this);
+      _RestRepository_client.set(this, void 0);
+      _RestRepository_fetch.set(this, void 0);
+      _RestRepository_table.set(this, void 0);
+      __classPrivateFieldSet(this, _RestRepository_client, client2, \\"f\\");
+      __classPrivateFieldSet(this, _RestRepository_table, table, \\"f\\");
+      const fetchImpl = typeof fetch !== \\"undefined\\" ? fetch : __classPrivateFieldGet(this, _RestRepository_client, \\"f\\").options.fetch;
+      if (!fetchImpl) {
+        throw new Error(\`The \\\\\`fetch\\\\\` option passed to the Xata client is resolving to a falsy value and may not be correctly imported.\`);
+      }
+      __classPrivateFieldSet(this, _RestRepository_fetch, fetchImpl, \\"f\\");
+    }
+    create(object) {
+      return __awaiter(this, void 0, void 0, function* () {
+        const fetchProps = yield __classPrivateFieldGet(this, _RestRepository_instances, \\"m\\", _RestRepository_getFetchProps).call(this);
+        const record = transformObjectLinks(object);
+        const response = yield (0, api.insertRecord)(Object.assign({pathParams: {
+          workspace: \\"{workspaceId}\\",
+          dbBranchName: \\"{dbBranch}\\",
+          tableName: __classPrivateFieldGet(this, _RestRepository_table, \\"f\\")
+        }, body: record}, fetchProps));
+        const finalObject = yield this.read(response.id);
+        if (!finalObject) {
+          throw new Error(\\"The server failed to save the record\\");
+        }
+        return finalObject;
+      });
+    }
+    createMany(objects) {
+      return __awaiter(this, void 0, void 0, function* () {
+        const fetchProps = yield __classPrivateFieldGet(this, _RestRepository_instances, \\"m\\", _RestRepository_getFetchProps).call(this);
+        const records = objects.map((object) => transformObjectLinks(object));
+        const response = yield (0, api.bulkInsertTableRecords)(Object.assign({pathParams: {workspace: \\"{workspaceId}\\", dbBranchName: \\"{dbBranch}\\", tableName: __classPrivateFieldGet(this, _RestRepository_table, \\"f\\")}, body: {records}}, fetchProps));
+        const finalObjects = yield this.any(...response.recordIDs.map((id) => this.filter(\\"id\\", id))).getAll();
+        if (finalObjects.length !== objects.length) {
+          throw new Error(\\"The server failed to save some records\\");
+        }
+        return finalObjects;
+      });
+    }
+    read(recordId) {
+      return __awaiter(this, void 0, void 0, function* () {
+        const fetchProps = yield __classPrivateFieldGet(this, _RestRepository_instances, \\"m\\", _RestRepository_getFetchProps).call(this);
+        const response = yield (0, api.getRecord)(Object.assign({pathParams: {workspace: \\"{workspaceId}\\", dbBranchName: \\"{dbBranch}\\", tableName: __classPrivateFieldGet(this, _RestRepository_table, \\"f\\"), recordId}}, fetchProps));
+        return __classPrivateFieldGet(this, _RestRepository_client, \\"f\\").initObject(__classPrivateFieldGet(this, _RestRepository_table, \\"f\\"), response);
+      });
+    }
+    update(recordId, object) {
+      return __awaiter(this, void 0, void 0, function* () {
+        const fetchProps = yield __classPrivateFieldGet(this, _RestRepository_instances, \\"m\\", _RestRepository_getFetchProps).call(this);
+        const response = yield (0, api.updateRecordWithID)(Object.assign({pathParams: {workspace: \\"{workspaceId}\\", dbBranchName: \\"{dbBranch}\\", tableName: __classPrivateFieldGet(this, _RestRepository_table, \\"f\\"), recordId}, body: object}, fetchProps));
+        const item = yield this.read(response.id);
+        if (!item)
+          throw new Error(\\"The server failed to save the record\\");
+        return item;
+      });
+    }
+    insert(recordId, object) {
+      return __awaiter(this, void 0, void 0, function* () {
+        const fetchProps = yield __classPrivateFieldGet(this, _RestRepository_instances, \\"m\\", _RestRepository_getFetchProps).call(this);
+        const record = transformObjectLinks(object);
+        const response = yield (0, api.insertRecordWithID)(Object.assign({pathParams: {
+          workspace: \\"{workspaceId}\\",
+          dbBranchName: \\"{dbBranch}\\",
+          tableName: __classPrivateFieldGet(this, _RestRepository_table, \\"f\\"),
+          recordId
+        }, body: record}, fetchProps));
+        const finalObject = yield this.read(response.id);
+        if (!finalObject) {
+          throw new Error(\\"The server failed to save the record\\");
+        }
+        return finalObject;
+      });
+    }
+    updateOrInsert(recordId, object) {
+      return __awaiter(this, void 0, void 0, function* () {
+        const fetchProps = yield __classPrivateFieldGet(this, _RestRepository_instances, \\"m\\", _RestRepository_getFetchProps).call(this);
+        const response = yield (0, api.upsertRecordWithID)(Object.assign({pathParams: {workspace: \\"{workspaceId}\\", dbBranchName: \\"{dbBranch}\\", tableName: __classPrivateFieldGet(this, _RestRepository_table, \\"f\\"), recordId}, body: object}, fetchProps));
+        const item = yield this.read(response.id);
+        if (!item)
+          throw new Error(\\"The server failed to save the record\\");
+        return item;
+      });
+    }
+    delete(recordId) {
+      return __awaiter(this, void 0, void 0, function* () {
+        const fetchProps = yield __classPrivateFieldGet(this, _RestRepository_instances, \\"m\\", _RestRepository_getFetchProps).call(this);
+        yield (0, api.deleteRecord)(Object.assign({pathParams: {workspace: \\"{workspaceId}\\", dbBranchName: \\"{dbBranch}\\", tableName: __classPrivateFieldGet(this, _RestRepository_table, \\"f\\"), recordId}}, fetchProps));
+      });
+    }
+    query(query2, options = {}) {
+      var _a, _b, _c;
+      return __awaiter(this, void 0, void 0, function* () {
+        const data = query2.getQueryOptions();
+        const body = {
+          filter: Object.values(data.filter).some(Boolean) ? data.filter : void 0,
+          sort: (_a = (0, filters.buildSortFilter)(options === null || options === void 0 ? void 0 : options.sort)) !== null && _a !== void 0 ? _a : data.sort,
+          page: (_b = options === null || options === void 0 ? void 0 : options.page) !== null && _b !== void 0 ? _b : data.page,
+          columns: (_c = options === null || options === void 0 ? void 0 : options.columns) !== null && _c !== void 0 ? _c : data.columns
+        };
+        const fetchProps = yield __classPrivateFieldGet(this, _RestRepository_instances, \\"m\\", _RestRepository_getFetchProps).call(this);
+        const {meta, records: objects} = yield (0, api.queryTable)(Object.assign({pathParams: {workspace: \\"{workspaceId}\\", dbBranchName: \\"{dbBranch}\\", tableName: __classPrivateFieldGet(this, _RestRepository_table, \\"f\\")}, body}, fetchProps));
+        const records = objects.map((record) => __classPrivateFieldGet(this, _RestRepository_client, \\"f\\").initObject(__classPrivateFieldGet(this, _RestRepository_table, \\"f\\"), record));
+        return new pagination.Page(query2, meta, records);
+      });
+    }
+  }
+  exports.RestRepository = RestRepository2;
+  _RestRepository_client = new WeakMap(), _RestRepository_fetch = new WeakMap(), _RestRepository_table = new WeakMap(), _RestRepository_instances = new WeakSet(), _RestRepository_getFetchProps = function _RestRepository_getFetchProps2() {
+    return __awaiter(this, void 0, void 0, function* () {
+      const branch = yield __classPrivateFieldGet(this, _RestRepository_client, \\"f\\").getBranch();
+      return {
+        fetchImpl: __classPrivateFieldGet(this, _RestRepository_fetch, \\"f\\"),
+        apiKey: __classPrivateFieldGet(this, _RestRepository_client, \\"f\\").options.apiKey,
+        apiUrl: \\"\\",
+        workspacesApiUrl: (path, params) => {
+          var _a, _b;
+          const baseUrl = (_a = __classPrivateFieldGet(this, _RestRepository_client, \\"f\\").options.databaseURL) !== null && _a !== void 0 ? _a : \\"\\";
+          const hasBranch = (_b = params.dbBranchName) !== null && _b !== void 0 ? _b : params.branch;
+          const newPath = path.replace(/^\\\\/db\\\\/[^/]+/, hasBranch ? \`:\${branch}\` : \\"\\");
+          return baseUrl + newPath;
+        }
+      };
+    });
+  };
+  class RestRespositoryFactory2 {
+    createRepository(client2, table) {
+      return new RestRepository2(client2, table);
+    }
+  }
+  exports.RestRespositoryFactory = RestRespositoryFactory2;
+  class BaseClient2 {
+    constructor(options, links = {}) {
+      _BaseClient_links.set(this, void 0);
+      _BaseClient_branch.set(this, void 0);
+      if (!options.databaseURL || !options.apiKey || !options.branch) {
+        throw new Error(\\"Options databaseURL, apiKey and branch are required\\");
+      }
+      this.options = options;
+      __classPrivateFieldSet(this, _BaseClient_links, links, \\"f\\");
+      const factory = options.repositoryFactory || new RestRespositoryFactory2();
+      this.db = new Proxy({}, {
+        get: (_target, prop) => {
+          if (typeof prop !== \\"string\\")
+            throw new Error(\\"Invalid table name\\");
+          return factory.createRepository(this, prop);
+        }
+      });
+    }
+    initObject(table, object) {
+      const o = {};
+      Object.assign(o, object);
+      const tableLinks = __classPrivateFieldGet(this, _BaseClient_links, \\"f\\")[table] || [];
+      for (const link of tableLinks) {
+        const [field, linkTable] = link;
+        const value = o[field];
+        if (value && typeof value === \\"object\\") {
+          const {id} = value;
+          if (Object.keys(value).find((col) => col === \\"id\\")) {
+            o[field] = this.initObject(linkTable, value);
+          } else if (id) {
+            o[field] = {
+              id,
+              get: () => {
+                this.db[linkTable].read(id);
+              }
+            };
+          }
+        }
+      }
+      const db = this.db;
+      o.read = function() {
+        return db[table].read(o[\\"id\\"]);
+      };
+      o.update = function(data) {
+        return db[table].update(o[\\"id\\"], data);
+      };
+      o.delete = function() {
+        return db[table].delete(o[\\"id\\"]);
+      };
+      for (const prop of [\\"read\\", \\"update\\", \\"delete\\"]) {
+        Object.defineProperty(o, prop, {enumerable: false});
+      }
+      Object.freeze(o);
+      return o;
+    }
+    getBranch() {
+      var e_1, _a;
+      return __awaiter(this, void 0, void 0, function* () {
+        if (__classPrivateFieldGet(this, _BaseClient_branch, \\"f\\"))
+          return __classPrivateFieldGet(this, _BaseClient_branch, \\"f\\");
+        const {branch: param} = this.options;
+        const strategies = Array.isArray(param) ? [...param] : [param];
+        const evaluateBranch = (strategy) => __awaiter(this, void 0, void 0, function* () {
+          return isBranchStrategyBuilder(strategy) ? yield strategy() : strategy;
+        });
+        try {
+          for (var strategies_1 = __asyncValues(strategies), strategies_1_1; strategies_1_1 = yield strategies_1.next(), !strategies_1_1.done; ) {
+            const strategy = strategies_1_1.value;
+            const branch = yield evaluateBranch(strategy);
+            if (branch) {
+              __classPrivateFieldSet(this, _BaseClient_branch, branch, \\"f\\");
+              return branch;
+            }
+          }
+        } catch (e_1_1) {
+          e_1 = {error: e_1_1};
+        } finally {
+          try {
+            if (strategies_1_1 && !strategies_1_1.done && (_a = strategies_1.return))
+              yield _a.call(strategies_1);
+          } finally {
+            if (e_1)
+              throw e_1.error;
+          }
+        }
+        throw new Error(\\"Unable to resolve branch value\\");
+      });
+    }
+  }
+  exports.BaseClient = BaseClient2;
+  _BaseClient_links = new WeakMap(), _BaseClient_branch = new WeakMap();
+  const isBranchStrategyBuilder = (strategy) => {
+    return typeof strategy === \\"function\\";
+  };
+  const transformObjectLinks = (object) => {
+    return Object.entries(object).reduce((acc, [key, value]) => {
+      if (value && typeof value === \\"object\\" && typeof value.id === \\"string\\") {
+        return Object.assign(Object.assign({}, acc), {[key]: value.id});
+      }
+      return Object.assign(Object.assign({}, acc), {[key]: value});
+    }, {});
+  };
+});
+var schema = createCommonjsModule(function(module, exports) {
+  var __createBinding = commonjsGlobal && commonjsGlobal.__createBinding || (Object.create ? function(o, m, k, k2) {
+    if (k2 === void 0)
+      k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || (\\"get\\" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = {enumerable: true, get: function() {
+        return m[k];
+      }};
+    }
+    Object.defineProperty(o, k2, desc);
+  } : function(o, m, k, k2) {
+    if (k2 === void 0)
+      k2 = k;
+    o[k2] = m[k];
+  });
+  var __exportStar = commonjsGlobal && commonjsGlobal.__exportStar || function(m, exports2) {
+    for (var p in m)
+      if (p !== \\"default\\" && !Object.prototype.hasOwnProperty.call(exports2, p))
+        __createBinding(exports2, m, p);
+  };
+  Object.defineProperty(exports, \\"__esModule\\", {value: true});
+  exports.RestRespositoryFactory = exports.RestRepository = exports.Repository = exports.BaseClient = exports.Query = void 0;
+  __exportStar(operators, exports);
+  __exportStar(pagination, exports);
+  Object.defineProperty(exports, \\"Query\\", {enumerable: true, get: function() {
+    return query.Query;
+  }});
+  Object.defineProperty(exports, \\"BaseClient\\", {enumerable: true, get: function() {
+    return repository.BaseClient;
+  }});
+  Object.defineProperty(exports, \\"Repository\\", {enumerable: true, get: function() {
+    return repository.Repository;
+  }});
+  Object.defineProperty(exports, \\"RestRepository\\", {enumerable: true, get: function() {
+    return repository.RestRepository;
+  }});
+  Object.defineProperty(exports, \\"RestRespositoryFactory\\", {enumerable: true, get: function() {
+    return repository.RestRespositoryFactory;
+  }});
+});
+var dist = createCommonjsModule(function(module, exports) {
+  var __createBinding = commonjsGlobal && commonjsGlobal.__createBinding || (Object.create ? function(o, m, k, k2) {
+    if (k2 === void 0)
+      k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || (\\"get\\" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = {enumerable: true, get: function() {
+        return m[k];
+      }};
+    }
+    Object.defineProperty(o, k2, desc);
+  } : function(o, m, k, k2) {
+    if (k2 === void 0)
+      k2 = k;
+    o[k2] = m[k];
+  });
+  var __exportStar = commonjsGlobal && commonjsGlobal.__exportStar || function(m, exports2) {
+    for (var p in m)
+      if (p !== \\"default\\" && !Object.prototype.hasOwnProperty.call(exports2, p))
+        __createBinding(exports2, m, p);
+  };
+  Object.defineProperty(exports, \\"__esModule\\", {value: true});
+  exports.XataError = void 0;
+  class XataError2 extends Error {
+    constructor(message, status) {
+      super(message);
+      this.status = status;
+    }
+  }
+  exports.XataError = XataError2;
+  __exportStar(api, exports);
+  __exportStar(schema, exports);
+});
+var BaseClient = dist.BaseClient;
+dist.Operations;
+dist.PAGINATION_DEFAULT_OFFSET;
+dist.PAGINATION_DEFAULT_SIZE;
+dist.PAGINATION_MAX_OFFSET;
+dist.PAGINATION_MAX_SIZE;
+dist.Page;
+dist.Query;
+dist.Repository;
+dist.RestRepository;
+dist.RestRespositoryFactory;
+dist.XataApiClient;
+dist.XataError;
+dist.acceptWorkspaceMemberInvite;
+dist.addTableColumn;
+dist.bulkInsertTableRecords;
+dist.cancelWorkspaceMemberInvite;
+dist.contains;
+dist.createBranch;
+dist.createDatabase;
+dist.createTable;
+dist.createUserAPIKey;
+dist.createWorkspace;
+dist.deleteBranch;
+dist.deleteColumn;
+dist.deleteDatabase;
+dist.deleteRecord;
+dist.deleteTable;
+dist.deleteUser;
+dist.deleteUserAPIKey;
+dist.deleteWorkspace;
+dist.endsWith;
+dist.executeBranchMigrationPlan;
+dist.exists;
+dist.ge;
+dist.getBranchDetails;
+dist.getBranchList;
+dist.getBranchMetadata;
+dist.getBranchMigrationHistory;
+dist.getBranchMigrationPlan;
+dist.getBranchStats;
+dist.getColumn;
+dist.getDatabaseList;
+dist.getRecord;
+dist.getTableColumns;
+dist.getTableSchema;
+dist.getUser;
+dist.getUserAPIKeys;
+dist.getWorkspace;
+dist.getWorkspaceMembersList;
+dist.getWorkspacesList;
+dist.gt;
+dist.gte;
+dist.includes;
+dist.includesAll;
+dist.includesPattern;
+dist.includesSubstring;
+dist.insertRecord;
+dist.insertRecordWithID;
+dist.inviteWorkspaceMember;
+dist.is;
+dist.isNot;
+dist.le;
+dist.lt;
+dist.lte;
+dist.notExists;
+dist.operationsByTag;
+dist.pattern;
+dist.queryTable;
+dist.removeWorkspaceMember;
+dist.resendWorkspaceMemberInvite;
+dist.searchBranch;
+dist.setTableSchema;
+dist.startsWith;
+dist.updateBranchMetadata;
+dist.updateColumn;
+dist.updateRecordWithID;
+dist.updateTable;
+dist.updateUser;
+dist.updateWorkspace;
+dist.updateWorkspaceMemberRole;
+dist.upsertRecordWithID;
+
+console.log(BaseClient);
+",
+    "dynamicImports": [],
+    "exports": [],
+    "facadeModuleId": "/index.js",
+    "fileName": "index.js",
+    "implicitlyLoadedBefore": [],
+    "importedBindings": {},
+    "imports": [],
+    "isDynamicEntry": false,
+    "isEntry": true,
+    "isImplicitEntry": false,
+    "map": null,
+    "modules": {
+      "/index.js": {
+        "code": "console.log(BaseClient);",
+        "originalLength": 71,
+        "removedExports": [],
+        "renderedExports": [],
+        "renderedLength": 24,
+      },
+      "https://cdn.skypack.dev/-/@xata.io/client@v0.4.0-VFehxEUibKqSVSLkHFfj/dist=es2019,mode=imports/optimized/@xata.io/client.js": {
+        "code": "var commonjsGlobal = typeof globalThis !== \\"undefined\\" ? globalThis : typeof window !== \\"undefined\\" ? window : typeof global !== \\"undefined\\" ? global : typeof self !== \\"undefined\\" ? self : {};
+function createCommonjsModule(fn, basedir, module) {
+  return module = {
+    path: basedir,
+    exports: {},
+    require: function(path, base) {
+      return commonjsRequire(path, base === void 0 || base === null ? module.path : base);
+    }
+  }, fn(module, module.exports), module.exports;
+}
+function commonjsRequire() {
+  throw new Error(\\"Dynamic requires are not currently supported by @rollup/plugin-commonjs\\");
+}
+var fetcher = createCommonjsModule(function(module, exports) {
+  var __awaiter = commonjsGlobal && commonjsGlobal.__awaiter || function(thisArg, _arguments, P, generator) {
+    function adopt(value) {
+      return value instanceof P ? value : new P(function(resolve) {
+        resolve(value);
+      });
+    }
+    return new (P || (P = Promise))(function(resolve, reject) {
+      function fulfilled(value) {
+        try {
+          step(generator.next(value));
+        } catch (e) {
+          reject(e);
+        }
+      }
+      function rejected(value) {
+        try {
+          step(generator[\\"throw\\"](value));
+        } catch (e) {
+          reject(e);
+        }
+      }
+      function step(result) {
+        result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+      }
+      step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+  };
+  Object.defineProperty(exports, \\"__esModule\\", {value: true});
+  exports.fetch = void 0;
+  const resolveUrl = (url, queryParams = {}, pathParams = {}) => {
+    const query2 = new URLSearchParams(queryParams).toString();
+    const queryString = query2.length > 0 ? \`?\${query2}\` : \\"\\";
+    return url.replace(/\\\\{\\\\w*\\\\}/g, (key) => pathParams[key.slice(1, -1)]) + queryString;
+  };
+  const fallbackError = {message: \\"Network response was not ok\\"};
+  function buildBaseUrl({path, workspacesApiUrl, apiUrl, pathParams}) {
+    if (!(pathParams === null || pathParams === void 0 ? void 0 : pathParams.workspace))
+      return \`\${apiUrl}\${path}\`;
+    const url = typeof workspacesApiUrl === \\"string\\" ? \`\${workspacesApiUrl}\${path}\` : workspacesApiUrl(path, pathParams);
+    return url.replace(\\"{workspaceId}\\", pathParams.workspace);
+  }
+  function hostHeader(url) {
+    var _a;
+    const pattern2 = /.*:\\\\/\\\\/(?<host>[^/]+).*/;
+    const {groups} = (_a = pattern2.exec(url)) !== null && _a !== void 0 ? _a : {};
+    return (groups === null || groups === void 0 ? void 0 : groups.host) ? {Host: groups.host} : {};
+  }
+  function fetch2({url: path, method, body, headers, pathParams, queryParams, fetchImpl, apiKey, apiUrl, workspacesApiUrl}) {
+    return __awaiter(this, void 0, void 0, function* () {
+      const baseUrl = buildBaseUrl({path, workspacesApiUrl, pathParams, apiUrl});
+      const fullUrl = resolveUrl(baseUrl, queryParams, pathParams);
+      const url = fullUrl.includes(\\"localhost\\") ? fullUrl.replace(/^[^.]+\\\\./, \\"http://\\") : fullUrl;
+      const response = yield fetchImpl(url, {
+        method: method.toUpperCase(),
+        body: body ? JSON.stringify(body) : void 0,
+        headers: Object.assign(Object.assign(Object.assign({\\"Content-Type\\": \\"application/json\\"}, headers), hostHeader(fullUrl)), {Authorization: \`Bearer \${apiKey}\`})
+      });
+      if (response.status === 204) {
+        return {};
+      }
+      try {
+        const jsonResponse = yield response.json();
+        if (response.ok) {
+          return jsonResponse;
+        }
+        if (jsonResponse.message) {
+          throw withStatus({message: jsonResponse.message}, response.status);
+        } else {
+          throw withStatus(fallbackError, response.status);
+        }
+      } catch (e) {
+        if (e instanceof Error) {
+          const error = {
+            message: e.message
+          };
+          throw withStatus(error, response.status);
+        } else if (typeof e === \\"object\\" && typeof e.message === \\"string\\") {
+          throw withStatus(e, response.status);
+        } else {
+          throw withStatus(fallbackError, response.status);
+        }
+      }
+    });
+  }
+  exports.fetch = fetch2;
+  const withStatus = (error, status) => Object.assign(Object.assign({}, error), {status});
+});
+var components = createCommonjsModule(function(module, exports) {
+  Object.defineProperty(exports, \\"__esModule\\", {value: true});
+  exports.searchBranch = exports.queryTable = exports.bulkInsertTableRecords = exports.getRecord = exports.deleteRecord = exports.upsertRecordWithID = exports.updateRecordWithID = exports.insertRecordWithID = exports.insertRecord = exports.updateColumn = exports.deleteColumn = exports.getColumn = exports.addTableColumn = exports.getTableColumns = exports.setTableSchema = exports.getTableSchema = exports.updateTable = exports.deleteTable = exports.createTable = exports.getBranchStats = exports.getBranchMigrationPlan = exports.executeBranchMigrationPlan = exports.getBranchMigrationHistory = exports.getBranchMetadata = exports.updateBranchMetadata = exports.deleteBranch = exports.createBranch = exports.getBranchDetails = exports.deleteDatabase = exports.createDatabase = exports.getBranchList = exports.getDatabaseList = exports.acceptWorkspaceMemberInvite = exports.resendWorkspaceMemberInvite = exports.cancelWorkspaceMemberInvite = exports.inviteWorkspaceMember = exports.removeWorkspaceMember = exports.updateWorkspaceMemberRole = exports.getWorkspaceMembersList = exports.deleteWorkspace = exports.updateWorkspace = exports.getWorkspace = exports.getWorkspacesList = exports.createWorkspace = exports.deleteUserAPIKey = exports.createUserAPIKey = exports.getUserAPIKeys = exports.deleteUser = exports.updateUser = exports.getUser = void 0;
+  exports.operationsByTag = void 0;
+  const getUser2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/user\\", method: \\"get\\"}, variables));
+  exports.getUser = getUser2;
+  const updateUser2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/user\\", method: \\"put\\"}, variables));
+  exports.updateUser = updateUser2;
+  const deleteUser2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/user\\", method: \\"delete\\"}, variables));
+  exports.deleteUser = deleteUser2;
+  const getUserAPIKeys2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/user/keys\\", method: \\"get\\"}, variables));
+  exports.getUserAPIKeys = getUserAPIKeys2;
+  const createUserAPIKey2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/user/keys/{keyName}\\", method: \\"post\\"}, variables));
+  exports.createUserAPIKey = createUserAPIKey2;
+  const deleteUserAPIKey2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/user/keys/{keyName}\\", method: \\"delete\\"}, variables));
+  exports.deleteUserAPIKey = deleteUserAPIKey2;
+  const createWorkspace2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/workspaces\\", method: \\"post\\"}, variables));
+  exports.createWorkspace = createWorkspace2;
+  const getWorkspacesList2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/workspaces\\", method: \\"get\\"}, variables));
+  exports.getWorkspacesList = getWorkspacesList2;
+  const getWorkspace2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/workspaces/{workspaceId}\\", method: \\"get\\"}, variables));
+  exports.getWorkspace = getWorkspace2;
+  const updateWorkspace2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/workspaces/{workspaceId}\\", method: \\"put\\"}, variables));
+  exports.updateWorkspace = updateWorkspace2;
+  const deleteWorkspace2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/workspaces/{workspaceId}\\", method: \\"delete\\"}, variables));
+  exports.deleteWorkspace = deleteWorkspace2;
+  const getWorkspaceMembersList2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/workspaces/{workspaceId}/members\\", method: \\"get\\"}, variables));
+  exports.getWorkspaceMembersList = getWorkspaceMembersList2;
+  const updateWorkspaceMemberRole2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/workspaces/{workspaceId}/members/{userId}\\", method: \\"put\\"}, variables));
+  exports.updateWorkspaceMemberRole = updateWorkspaceMemberRole2;
+  const removeWorkspaceMember2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/workspaces/{workspaceId}/members/{userId}\\", method: \\"delete\\"}, variables));
+  exports.removeWorkspaceMember = removeWorkspaceMember2;
+  const inviteWorkspaceMember2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/workspaces/{workspaceId}/invites\\", method: \\"post\\"}, variables));
+  exports.inviteWorkspaceMember = inviteWorkspaceMember2;
+  const cancelWorkspaceMemberInvite2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/workspaces/{workspaceId}/invites/{inviteId}\\", method: \\"delete\\"}, variables));
+  exports.cancelWorkspaceMemberInvite = cancelWorkspaceMemberInvite2;
+  const resendWorkspaceMemberInvite2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/workspaces/{workspaceId}/invites/{inviteId}/resend\\", method: \\"post\\"}, variables));
+  exports.resendWorkspaceMemberInvite = resendWorkspaceMemberInvite2;
+  const acceptWorkspaceMemberInvite2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/workspaces/{workspaceId}/invites/{inviteKey}/accept\\", method: \\"post\\"}, variables));
+  exports.acceptWorkspaceMemberInvite = acceptWorkspaceMemberInvite2;
+  const getDatabaseList2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/dbs\\", method: \\"get\\"}, variables));
+  exports.getDatabaseList = getDatabaseList2;
+  const getBranchList2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/dbs/{dbName}\\", method: \\"get\\"}, variables));
+  exports.getBranchList = getBranchList2;
+  const createDatabase2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/dbs/{dbName}\\", method: \\"put\\"}, variables));
+  exports.createDatabase = createDatabase2;
+  const deleteDatabase2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/dbs/{dbName}\\", method: \\"delete\\"}, variables));
+  exports.deleteDatabase = deleteDatabase2;
+  const getBranchDetails2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/db/{dbBranchName}\\", method: \\"get\\"}, variables));
+  exports.getBranchDetails = getBranchDetails2;
+  const createBranch2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/db/{dbBranchName}\\", method: \\"put\\"}, variables));
+  exports.createBranch = createBranch2;
+  const deleteBranch2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/db/{dbBranchName}\\", method: \\"delete\\"}, variables));
+  exports.deleteBranch = deleteBranch2;
+  const updateBranchMetadata2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/db/{dbBranchName}/metadata\\", method: \\"put\\"}, variables));
+  exports.updateBranchMetadata = updateBranchMetadata2;
+  const getBranchMetadata2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/db/{dbBranchName}/metadata\\", method: \\"get\\"}, variables));
+  exports.getBranchMetadata = getBranchMetadata2;
+  const getBranchMigrationHistory2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/db/{dbBranchName}/migrations\\", method: \\"get\\"}, variables));
+  exports.getBranchMigrationHistory = getBranchMigrationHistory2;
+  const executeBranchMigrationPlan2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/db/{dbBranchName}/migrations/execute\\", method: \\"post\\"}, variables));
+  exports.executeBranchMigrationPlan = executeBranchMigrationPlan2;
+  const getBranchMigrationPlan2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/db/{dbBranchName}/migrations/plan\\", method: \\"post\\"}, variables));
+  exports.getBranchMigrationPlan = getBranchMigrationPlan2;
+  const getBranchStats2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/db/{dbBranchName}/stats\\", method: \\"get\\"}, variables));
+  exports.getBranchStats = getBranchStats2;
+  const createTable2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/db/{dbBranchName}/tables/{tableName}\\", method: \\"put\\"}, variables));
+  exports.createTable = createTable2;
+  const deleteTable2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/db/{dbBranchName}/tables/{tableName}\\", method: \\"delete\\"}, variables));
+  exports.deleteTable = deleteTable2;
+  const updateTable2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/db/{dbBranchName}/tables/{tableName}\\", method: \\"patch\\"}, variables));
+  exports.updateTable = updateTable2;
+  const getTableSchema2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/db/{dbBranchName}/tables/{tableName}/schema\\", method: \\"get\\"}, variables));
+  exports.getTableSchema = getTableSchema2;
+  const setTableSchema2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/db/{dbBranchName}/tables/{tableName}/schema\\", method: \\"put\\"}, variables));
+  exports.setTableSchema = setTableSchema2;
+  const getTableColumns2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/db/{dbBranchName}/tables/{tableName}/columns\\", method: \\"get\\"}, variables));
+  exports.getTableColumns = getTableColumns2;
+  const addTableColumn2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/db/{dbBranchName}/tables/{tableName}/columns\\", method: \\"post\\"}, variables));
+  exports.addTableColumn = addTableColumn2;
+  const getColumn2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/db/{dbBranchName}/tables/{tableName}/columns/{columnName}\\", method: \\"get\\"}, variables));
+  exports.getColumn = getColumn2;
+  const deleteColumn2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/db/{dbBranchName}/tables/{tableName}/columns/{columnName}\\", method: \\"delete\\"}, variables));
+  exports.deleteColumn = deleteColumn2;
+  const updateColumn2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/db/{dbBranchName}/tables/{tableName}/columns/{columnName}\\", method: \\"patch\\"}, variables));
+  exports.updateColumn = updateColumn2;
+  const insertRecord2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/db/{dbBranchName}/tables/{tableName}/data\\", method: \\"post\\"}, variables));
+  exports.insertRecord = insertRecord2;
+  const insertRecordWithID2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/db/{dbBranchName}/tables/{tableName}/data/{recordId}\\", method: \\"put\\"}, variables));
+  exports.insertRecordWithID = insertRecordWithID2;
+  const updateRecordWithID2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/db/{dbBranchName}/tables/{tableName}/data/{recordId}\\", method: \\"patch\\"}, variables));
+  exports.updateRecordWithID = updateRecordWithID2;
+  const upsertRecordWithID2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/db/{dbBranchName}/tables/{tableName}/data/{recordId}\\", method: \\"post\\"}, variables));
+  exports.upsertRecordWithID = upsertRecordWithID2;
+  const deleteRecord2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/db/{dbBranchName}/tables/{tableName}/data/{recordId}\\", method: \\"delete\\"}, variables));
+  exports.deleteRecord = deleteRecord2;
+  const getRecord2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/db/{dbBranchName}/tables/{tableName}/data/{recordId}\\", method: \\"get\\"}, variables));
+  exports.getRecord = getRecord2;
+  const bulkInsertTableRecords2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/db/{dbBranchName}/tables/{tableName}/bulk\\", method: \\"post\\"}, variables));
+  exports.bulkInsertTableRecords = bulkInsertTableRecords2;
+  const queryTable2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/db/{dbBranchName}/tables/{tableName}/query\\", method: \\"post\\"}, variables));
+  exports.queryTable = queryTable2;
+  const searchBranch2 = (variables) => (0, fetcher.fetch)(Object.assign({url: \\"/db/{dbBranchName}/search\\", method: \\"post\\"}, variables));
+  exports.searchBranch = searchBranch2;
+  exports.operationsByTag = {
+    users: {getUser: exports.getUser, updateUser: exports.updateUser, deleteUser: exports.deleteUser, getUserAPIKeys: exports.getUserAPIKeys, createUserAPIKey: exports.createUserAPIKey, deleteUserAPIKey: exports.deleteUserAPIKey},
+    workspaces: {
+      createWorkspace: exports.createWorkspace,
+      getWorkspacesList: exports.getWorkspacesList,
+      getWorkspace: exports.getWorkspace,
+      updateWorkspace: exports.updateWorkspace,
+      deleteWorkspace: exports.deleteWorkspace,
+      getWorkspaceMembersList: exports.getWorkspaceMembersList,
+      updateWorkspaceMemberRole: exports.updateWorkspaceMemberRole,
+      removeWorkspaceMember: exports.removeWorkspaceMember,
+      inviteWorkspaceMember: exports.inviteWorkspaceMember,
+      cancelWorkspaceMemberInvite: exports.cancelWorkspaceMemberInvite,
+      resendWorkspaceMemberInvite: exports.resendWorkspaceMemberInvite,
+      acceptWorkspaceMemberInvite: exports.acceptWorkspaceMemberInvite
+    },
+    database: {getDatabaseList: exports.getDatabaseList, createDatabase: exports.createDatabase, deleteDatabase: exports.deleteDatabase},
+    branch: {
+      getBranchList: exports.getBranchList,
+      getBranchDetails: exports.getBranchDetails,
+      createBranch: exports.createBranch,
+      deleteBranch: exports.deleteBranch,
+      updateBranchMetadata: exports.updateBranchMetadata,
+      getBranchMetadata: exports.getBranchMetadata,
+      getBranchMigrationHistory: exports.getBranchMigrationHistory,
+      executeBranchMigrationPlan: exports.executeBranchMigrationPlan,
+      getBranchMigrationPlan: exports.getBranchMigrationPlan,
+      getBranchStats: exports.getBranchStats
+    },
+    table: {
+      createTable: exports.createTable,
+      deleteTable: exports.deleteTable,
+      updateTable: exports.updateTable,
+      getTableSchema: exports.getTableSchema,
+      setTableSchema: exports.setTableSchema,
+      getTableColumns: exports.getTableColumns,
+      addTableColumn: exports.addTableColumn,
+      getColumn: exports.getColumn,
+      deleteColumn: exports.deleteColumn,
+      updateColumn: exports.updateColumn
+    },
+    records: {
+      insertRecord: exports.insertRecord,
+      insertRecordWithID: exports.insertRecordWithID,
+      updateRecordWithID: exports.updateRecordWithID,
+      upsertRecordWithID: exports.upsertRecordWithID,
+      deleteRecord: exports.deleteRecord,
+      getRecord: exports.getRecord,
+      bulkInsertTableRecords: exports.bulkInsertTableRecords,
+      queryTable: exports.queryTable,
+      searchBranch: exports.searchBranch
+    }
+  };
+});
+var providers_1 = createCommonjsModule(function(module, exports) {
+  Object.defineProperty(exports, \\"__esModule\\", {value: true});
+  exports.getHostUrl = void 0;
+  function getHostUrl(provider, type) {
+    if (isValidAlias(provider)) {
+      return providers[provider][type];
+    } else if (isValidBuilder(provider)) {
+      return provider[type];
+    }
+    throw new Error(\\"Invalid API provider\\");
+  }
+  exports.getHostUrl = getHostUrl;
+  const providers = {
+    production: {
+      main: \\"https://api.xata.io\\",
+      workspaces: \\"https://{workspaceId}.xata.sh\\"
+    },
+    staging: {
+      main: \\"https://staging.xatabase.co\\",
+      workspaces: \\"https://{workspaceId}.staging.xatabase.co\\"
+    }
+  };
+  function isValidAlias(alias) {
+    return typeof alias === \\"string\\" && Object.keys(providers).includes(alias);
+  }
+  function isValidBuilder(builder) {
+    return typeof builder === \\"object\\" && typeof builder.main === \\"string\\" && typeof builder.workspaces === \\"string\\";
+  }
+});
+var client = createCommonjsModule(function(module, exports) {
+  var __classPrivateFieldSet = commonjsGlobal && commonjsGlobal.__classPrivateFieldSet || function(receiver, state, value, kind, f) {
+    if (kind === \\"m\\")
+      throw new TypeError(\\"Private method is not writable\\");
+    if (kind === \\"a\\" && !f)
+      throw new TypeError(\\"Private accessor was defined without a setter\\");
+    if (typeof state === \\"function\\" ? receiver !== state || !f : !state.has(receiver))
+      throw new TypeError(\\"Cannot write private member to an object whose class did not declare it\\");
+    return kind === \\"a\\" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value), value;
+  };
+  var __classPrivateFieldGet = commonjsGlobal && commonjsGlobal.__classPrivateFieldGet || function(receiver, state, kind, f) {
+    if (kind === \\"a\\" && !f)
+      throw new TypeError(\\"Private accessor was defined without a getter\\");
+    if (typeof state === \\"function\\" ? receiver !== state || !f : !state.has(receiver))
+      throw new TypeError(\\"Cannot read private member from an object whose class did not declare it\\");
+    return kind === \\"m\\" ? f : kind === \\"a\\" ? f.call(receiver) : f ? f.value : state.get(receiver);
+  };
+  var _XataApiClient_extraProps;
+  Object.defineProperty(exports, \\"__esModule\\", {value: true});
+  exports.XataApiClient = void 0;
+  class XataApiClient2 {
+    constructor(options) {
+      var _a;
+      _XataApiClient_extraProps.set(this, void 0);
+      const fetchImpl = typeof fetch !== \\"undefined\\" ? fetch : options.fetch;
+      if (!fetchImpl) {
+        throw new Error(\`The \\\\\`fetch\\\\\` option passed to the Xata client is resolving to a falsy value and may not be correctly imported.\`);
+      }
+      const provider = (_a = options.host) !== null && _a !== void 0 ? _a : \\"production\\";
+      __classPrivateFieldSet(this, _XataApiClient_extraProps, {
+        apiUrl: (0, providers_1.getHostUrl)(provider, \\"main\\"),
+        workspacesApiUrl: (0, providers_1.getHostUrl)(provider, \\"workspaces\\"),
+        fetchImpl,
+        apiKey: options.apiKey
+      }, \\"f\\");
+    }
+    get user() {
+      return new UserApi(__classPrivateFieldGet(this, _XataApiClient_extraProps, \\"f\\"));
+    }
+    get workspaces() {
+      return new WorkspaceApi(__classPrivateFieldGet(this, _XataApiClient_extraProps, \\"f\\"));
+    }
+    get databases() {
+      return new DatabaseApi(__classPrivateFieldGet(this, _XataApiClient_extraProps, \\"f\\"));
+    }
+    get branches() {
+      return new BranchApi(__classPrivateFieldGet(this, _XataApiClient_extraProps, \\"f\\"));
+    }
+    get tables() {
+      return new TableApi(__classPrivateFieldGet(this, _XataApiClient_extraProps, \\"f\\"));
+    }
+    get records() {
+      return new RecordsApi(__classPrivateFieldGet(this, _XataApiClient_extraProps, \\"f\\"));
+    }
+  }
+  exports.XataApiClient = XataApiClient2;
+  _XataApiClient_extraProps = new WeakMap();
+  class UserApi {
+    constructor(extraProps) {
+      this.extraProps = extraProps;
+    }
+    getUser() {
+      return components.operationsByTag.users.getUser(Object.assign({}, this.extraProps));
+    }
+    updateUser(user) {
+      return components.operationsByTag.users.updateUser(Object.assign({body: user}, this.extraProps));
+    }
+    deleteUser() {
+      return components.operationsByTag.users.deleteUser(Object.assign({}, this.extraProps));
+    }
+    getUserAPIKeys() {
+      return components.operationsByTag.users.getUserAPIKeys(Object.assign({}, this.extraProps));
+    }
+    createUserAPIKey(keyName) {
+      return components.operationsByTag.users.createUserAPIKey(Object.assign({pathParams: {keyName}}, this.extraProps));
+    }
+    deleteUserAPIKey(keyName) {
+      return components.operationsByTag.users.deleteUserAPIKey(Object.assign({pathParams: {keyName}}, this.extraProps));
+    }
+  }
+  class WorkspaceApi {
+    constructor(extraProps) {
+      this.extraProps = extraProps;
+    }
+    createWorkspace(workspaceMeta) {
+      return components.operationsByTag.workspaces.createWorkspace(Object.assign({body: workspaceMeta}, this.extraProps));
+    }
+    getWorkspacesList() {
+      return components.operationsByTag.workspaces.getWorkspacesList(Object.assign({}, this.extraProps));
+    }
+    getWorkspace(workspaceId) {
+      return components.operationsByTag.workspaces.getWorkspace(Object.assign({pathParams: {workspaceId}}, this.extraProps));
+    }
+    updateWorkspace(workspaceId, workspaceMeta) {
+      return components.operationsByTag.workspaces.updateWorkspace(Object.assign({pathParams: {workspaceId}, body: workspaceMeta}, this.extraProps));
+    }
+    deleteWorkspace(workspaceId) {
+      return components.operationsByTag.workspaces.deleteWorkspace(Object.assign({pathParams: {workspaceId}}, this.extraProps));
+    }
+    getWorkspaceMembersList(workspaceId) {
+      return components.operationsByTag.workspaces.getWorkspaceMembersList(Object.assign({pathParams: {workspaceId}}, this.extraProps));
+    }
+    updateWorkspaceMemberRole(workspaceId, userId, role) {
+      return components.operationsByTag.workspaces.updateWorkspaceMemberRole(Object.assign({pathParams: {workspaceId, userId}, body: {role}}, this.extraProps));
+    }
+    removeWorkspaceMember(workspaceId, userId) {
+      return components.operationsByTag.workspaces.removeWorkspaceMember(Object.assign({pathParams: {workspaceId, userId}}, this.extraProps));
+    }
+    inviteWorkspaceMember(workspaceId, email, role) {
+      return components.operationsByTag.workspaces.inviteWorkspaceMember(Object.assign({pathParams: {workspaceId}, body: {email, role}}, this.extraProps));
+    }
+    cancelWorkspaceMemberInvite(workspaceId, inviteId) {
+      return components.operationsByTag.workspaces.cancelWorkspaceMemberInvite(Object.assign({pathParams: {workspaceId, inviteId}}, this.extraProps));
+    }
+    resendWorkspaceMemberInvite(workspaceId, inviteId) {
+      return components.operationsByTag.workspaces.resendWorkspaceMemberInvite(Object.assign({pathParams: {workspaceId, inviteId}}, this.extraProps));
+    }
+    acceptWorkspaceMemberInvite(workspaceId, inviteKey) {
+      return components.operationsByTag.workspaces.acceptWorkspaceMemberInvite(Object.assign({pathParams: {workspaceId, inviteKey}}, this.extraProps));
+    }
+  }
+  class DatabaseApi {
+    constructor(extraProps) {
+      this.extraProps = extraProps;
+    }
+    getDatabaseList(workspace) {
+      return components.operationsByTag.database.getDatabaseList(Object.assign({pathParams: {workspace}}, this.extraProps));
+    }
+    createDatabase(workspace, dbName, options = {}) {
+      return components.operationsByTag.database.createDatabase(Object.assign({pathParams: {workspace, dbName}, body: options}, this.extraProps));
+    }
+    deleteDatabase(workspace, dbName) {
+      return components.operationsByTag.database.deleteDatabase(Object.assign({pathParams: {workspace, dbName}}, this.extraProps));
+    }
+  }
+  class BranchApi {
+    constructor(extraProps) {
+      this.extraProps = extraProps;
+    }
+    getBranchList(workspace, dbName) {
+      return components.operationsByTag.branch.getBranchList(Object.assign({pathParams: {workspace, dbName}}, this.extraProps));
+    }
+    getBranchDetails(workspace, database, branch) {
+      return components.operationsByTag.branch.getBranchDetails(Object.assign({pathParams: {workspace, dbBranchName: \`\${database}:\${branch}\`}}, this.extraProps));
+    }
+    createBranch(workspace, database, branch, from = \\"\\", options = {}) {
+      return components.operationsByTag.branch.createBranch(Object.assign({pathParams: {workspace, dbBranchName: \`\${database}:\${branch}\`}, queryParams: {from}, body: options}, this.extraProps));
+    }
+    deleteBranch(workspace, database, branch) {
+      return components.operationsByTag.branch.deleteBranch(Object.assign({pathParams: {workspace, dbBranchName: \`\${database}:\${branch}\`}}, this.extraProps));
+    }
+    updateBranchMetadata(workspace, database, branch, metadata = {}) {
+      return components.operationsByTag.branch.updateBranchMetadata(Object.assign({pathParams: {workspace, dbBranchName: \`\${database}:\${branch}\`}, body: metadata}, this.extraProps));
+    }
+    getBranchMetadata(workspace, database, branch) {
+      return components.operationsByTag.branch.getBranchMetadata(Object.assign({pathParams: {workspace, dbBranchName: \`\${database}:\${branch}\`}}, this.extraProps));
+    }
+    getBranchMigrationHistory(workspace, database, branch, options = {}) {
+      return components.operationsByTag.branch.getBranchMigrationHistory(Object.assign({pathParams: {workspace, dbBranchName: \`\${database}:\${branch}\`}, body: options}, this.extraProps));
+    }
+    executeBranchMigrationPlan(workspace, database, branch, migrationPlan) {
+      return components.operationsByTag.branch.executeBranchMigrationPlan(Object.assign({pathParams: {workspace, dbBranchName: \`\${database}:\${branch}\`}, body: migrationPlan}, this.extraProps));
+    }
+    getBranchMigrationPlan(workspace, database, branch, schema2) {
+      return components.operationsByTag.branch.getBranchMigrationPlan(Object.assign({pathParams: {workspace, dbBranchName: \`\${database}:\${branch}\`}, body: schema2}, this.extraProps));
+    }
+    getBranchStats(workspace, database, branch) {
+      return components.operationsByTag.branch.getBranchStats(Object.assign({pathParams: {workspace, dbBranchName: \`\${database}:\${branch}\`}}, this.extraProps));
+    }
+  }
+  class TableApi {
+    constructor(extraProps) {
+      this.extraProps = extraProps;
+    }
+    createTable(workspace, database, branch, tableName) {
+      return components.operationsByTag.table.createTable(Object.assign({pathParams: {workspace, dbBranchName: \`\${database}:\${branch}\`, tableName}}, this.extraProps));
+    }
+    deleteTable(workspace, database, branch, tableName) {
+      return components.operationsByTag.table.deleteTable(Object.assign({pathParams: {workspace, dbBranchName: \`\${database}:\${branch}\`, tableName}}, this.extraProps));
+    }
+    updateTable(workspace, database, branch, tableName, options) {
+      return components.operationsByTag.table.updateTable(Object.assign({pathParams: {workspace, dbBranchName: \`\${database}:\${branch}\`, tableName}, body: options}, this.extraProps));
+    }
+    getTableSchema(workspace, database, branch, tableName) {
+      return components.operationsByTag.table.getTableSchema(Object.assign({pathParams: {workspace, dbBranchName: \`\${database}:\${branch}\`, tableName}}, this.extraProps));
+    }
+    setTableSchema(workspace, database, branch, tableName, options) {
+      return components.operationsByTag.table.setTableSchema(Object.assign({pathParams: {workspace, dbBranchName: \`\${database}:\${branch}\`, tableName}, body: options}, this.extraProps));
+    }
+    getTableColumns(workspace, database, branch, tableName) {
+      return components.operationsByTag.table.getTableColumns(Object.assign({pathParams: {workspace, dbBranchName: \`\${database}:\${branch}\`, tableName}}, this.extraProps));
+    }
+    addTableColumn(workspace, database, branch, tableName, column) {
+      return components.operationsByTag.table.addTableColumn(Object.assign({pathParams: {workspace, dbBranchName: \`\${database}:\${branch}\`, tableName}, body: column}, this.extraProps));
+    }
+    getColumn(workspace, database, branch, tableName, columnName) {
+      return components.operationsByTag.table.getColumn(Object.assign({pathParams: {workspace, dbBranchName: \`\${database}:\${branch}\`, tableName, columnName}}, this.extraProps));
+    }
+    deleteColumn(workspace, database, branch, tableName, columnName) {
+      return components.operationsByTag.table.deleteColumn(Object.assign({pathParams: {workspace, dbBranchName: \`\${database}:\${branch}\`, tableName, columnName}}, this.extraProps));
+    }
+    updateColumn(workspace, database, branch, tableName, columnName, options) {
+      return components.operationsByTag.table.updateColumn(Object.assign({pathParams: {workspace, dbBranchName: \`\${database}:\${branch}\`, tableName, columnName}, body: options}, this.extraProps));
+    }
+  }
+  class RecordsApi {
+    constructor(extraProps) {
+      this.extraProps = extraProps;
+    }
+    insertRecord(workspace, database, branch, tableName, record) {
+      return components.operationsByTag.records.insertRecord(Object.assign({pathParams: {workspace, dbBranchName: \`\${database}:\${branch}\`, tableName}, body: record}, this.extraProps));
+    }
+    insertRecordWithID(workspace, database, branch, tableName, recordId, record, options = {}) {
+      return components.operationsByTag.records.insertRecordWithID(Object.assign({pathParams: {workspace, dbBranchName: \`\${database}:\${branch}\`, tableName, recordId}, queryParams: options, body: record}, this.extraProps));
+    }
+    updateRecordWithID(workspace, database, branch, tableName, recordId, record, options = {}) {
+      return components.operationsByTag.records.updateRecordWithID(Object.assign({pathParams: {workspace, dbBranchName: \`\${database}:\${branch}\`, tableName, recordId}, queryParams: options, body: record}, this.extraProps));
+    }
+    upsertRecordWithID(workspace, database, branch, tableName, recordId, record, options = {}) {
+      return components.operationsByTag.records.upsertRecordWithID(Object.assign({pathParams: {workspace, dbBranchName: \`\${database}:\${branch}\`, tableName, recordId}, queryParams: options, body: record}, this.extraProps));
+    }
+    deleteRecord(workspace, database, branch, tableName, recordId) {
+      return components.operationsByTag.records.deleteRecord(Object.assign({pathParams: {workspace, dbBranchName: \`\${database}:\${branch}\`, tableName, recordId}}, this.extraProps));
+    }
+    getRecord(workspace, database, branch, tableName, recordId, options = {}) {
+      return components.operationsByTag.records.getRecord(Object.assign({pathParams: {workspace, dbBranchName: \`\${database}:\${branch}\`, tableName, recordId}}, this.extraProps));
+    }
+    bulkInsertTableRecords(workspace, database, branch, tableName, records) {
+      return components.operationsByTag.records.bulkInsertTableRecords(Object.assign({pathParams: {workspace, dbBranchName: \`\${database}:\${branch}\`, tableName}, body: {records}}, this.extraProps));
+    }
+    queryTable(workspace, database, branch, tableName, query2) {
+      return components.operationsByTag.records.queryTable(Object.assign({pathParams: {workspace, dbBranchName: \`\${database}:\${branch}\`, tableName}, body: query2}, this.extraProps));
+    }
+    searchBranch(workspace, database, branch, query2) {
+      return components.operationsByTag.records.searchBranch(Object.assign({pathParams: {workspace, dbBranchName: \`\${database}:\${branch}\`}, body: query2}, this.extraProps));
+    }
+  }
+});
+var api = createCommonjsModule(function(module, exports) {
+  var __createBinding = commonjsGlobal && commonjsGlobal.__createBinding || (Object.create ? function(o, m, k, k2) {
+    if (k2 === void 0)
+      k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || (\\"get\\" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = {enumerable: true, get: function() {
+        return m[k];
+      }};
+    }
+    Object.defineProperty(o, k2, desc);
+  } : function(o, m, k, k2) {
+    if (k2 === void 0)
+      k2 = k;
+    o[k2] = m[k];
+  });
+  var __exportStar = commonjsGlobal && commonjsGlobal.__exportStar || function(m, exports2) {
+    for (var p in m)
+      if (p !== \\"default\\" && !Object.prototype.hasOwnProperty.call(exports2, p))
+        __createBinding(exports2, m, p);
+  };
+  Object.defineProperty(exports, \\"__esModule\\", {value: true});
+  exports.Operations = void 0;
+  Object.defineProperty(exports, \\"Operations\\", {enumerable: true, get: function() {
+    return components.operationsByTag;
+  }});
+  __exportStar(client, exports);
+  __exportStar(components, exports);
+});
+var operators = createCommonjsModule(function(module, exports) {
+  Object.defineProperty(exports, \\"__esModule\\", {value: true});
+  exports.includesAll = exports.includesPattern = exports.includesSubstring = exports.includes = exports.contains = exports.isNot = exports.is = exports.pattern = exports.endsWith = exports.startsWith = exports.notExists = exports.exists = exports.le = exports.lte = exports.lt = exports.gte = exports.ge = exports.gt = void 0;
+  const gt2 = (value) => ({$gt: value});
+  exports.gt = gt2;
+  const ge2 = (value) => ({$ge: value});
+  exports.ge = ge2;
+  const gte2 = (value) => ({$ge: value});
+  exports.gte = gte2;
+  const lt2 = (value) => ({$lt: value});
+  exports.lt = lt2;
+  const lte2 = (value) => ({$le: value});
+  exports.lte = lte2;
+  const le2 = (value) => ({$le: value});
+  exports.le = le2;
+  const exists2 = (column) => ({$exists: column});
+  exports.exists = exists2;
+  const notExists2 = (column) => ({$notExists: column});
+  exports.notExists = notExists2;
+  const startsWith2 = (value) => ({$startsWith: value});
+  exports.startsWith = startsWith2;
+  const endsWith2 = (value) => ({$endsWith: value});
+  exports.endsWith = endsWith2;
+  const pattern2 = (value) => ({$pattern: value});
+  exports.pattern = pattern2;
+  const is2 = (value) => ({$is: value});
+  exports.is = is2;
+  const isNot2 = (value) => ({$isNot: value});
+  exports.isNot = isNot2;
+  const contains2 = (value) => ({$contains: value});
+  exports.contains = contains2;
+  const includes2 = (value) => ({$includes: value});
+  exports.includes = includes2;
+  const includesSubstring2 = (value) => ({$includesSubstring: value});
+  exports.includesSubstring = includesSubstring2;
+  const includesPattern2 = (value) => ({$includesPattern: value});
+  exports.includesPattern = includesPattern2;
+  const includesAll2 = (value) => ({$includesAll: value});
+  exports.includesAll = includesAll2;
+});
+var pagination = createCommonjsModule(function(module, exports) {
+  var __awaiter = commonjsGlobal && commonjsGlobal.__awaiter || function(thisArg, _arguments, P, generator) {
+    function adopt(value) {
+      return value instanceof P ? value : new P(function(resolve) {
+        resolve(value);
+      });
+    }
+    return new (P || (P = Promise))(function(resolve, reject) {
+      function fulfilled(value) {
+        try {
+          step(generator.next(value));
+        } catch (e) {
+          reject(e);
+        }
+      }
+      function rejected(value) {
+        try {
+          step(generator[\\"throw\\"](value));
+        } catch (e) {
+          reject(e);
+        }
+      }
+      function step(result) {
+        result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+      }
+      step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+  };
+  var __classPrivateFieldSet = commonjsGlobal && commonjsGlobal.__classPrivateFieldSet || function(receiver, state, value, kind, f) {
+    if (kind === \\"m\\")
+      throw new TypeError(\\"Private method is not writable\\");
+    if (kind === \\"a\\" && !f)
+      throw new TypeError(\\"Private accessor was defined without a setter\\");
+    if (typeof state === \\"function\\" ? receiver !== state || !f : !state.has(receiver))
+      throw new TypeError(\\"Cannot write private member to an object whose class did not declare it\\");
+    return kind === \\"a\\" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value), value;
+  };
+  var __classPrivateFieldGet = commonjsGlobal && commonjsGlobal.__classPrivateFieldGet || function(receiver, state, kind, f) {
+    if (kind === \\"a\\" && !f)
+      throw new TypeError(\\"Private accessor was defined without a getter\\");
+    if (typeof state === \\"function\\" ? receiver !== state || !f : !state.has(receiver))
+      throw new TypeError(\\"Cannot read private member from an object whose class did not declare it\\");
+    return kind === \\"m\\" ? f : kind === \\"a\\" ? f.call(receiver) : f ? f.value : state.get(receiver);
+  };
+  var _Page_query;
+  Object.defineProperty(exports, \\"__esModule\\", {value: true});
+  exports.PAGINATION_DEFAULT_OFFSET = exports.PAGINATION_MAX_OFFSET = exports.PAGINATION_DEFAULT_SIZE = exports.PAGINATION_MAX_SIZE = exports.Page = void 0;
+  class Page2 {
+    constructor(query2, meta, records = []) {
+      _Page_query.set(this, void 0);
+      __classPrivateFieldSet(this, _Page_query, query2, \\"f\\");
+      this.meta = meta;
+      this.records = records;
+    }
+    nextPage(size, offset) {
+      return __awaiter(this, void 0, void 0, function* () {
+        return __classPrivateFieldGet(this, _Page_query, \\"f\\").getPaginated({page: {size, offset, after: this.meta.page.cursor}});
+      });
+    }
+    previousPage(size, offset) {
+      return __awaiter(this, void 0, void 0, function* () {
+        return __classPrivateFieldGet(this, _Page_query, \\"f\\").getPaginated({page: {size, offset, before: this.meta.page.cursor}});
+      });
+    }
+    firstPage(size, offset) {
+      return __awaiter(this, void 0, void 0, function* () {
+        return __classPrivateFieldGet(this, _Page_query, \\"f\\").getPaginated({page: {size, offset, first: this.meta.page.cursor}});
+      });
+    }
+    lastPage(size, offset) {
+      return __awaiter(this, void 0, void 0, function* () {
+        return __classPrivateFieldGet(this, _Page_query, \\"f\\").getPaginated({page: {size, offset, last: this.meta.page.cursor}});
+      });
+    }
+    hasNextPage() {
+      return this.meta.page.more;
+    }
+  }
+  exports.Page = Page2;
+  _Page_query = new WeakMap();
+  exports.PAGINATION_MAX_SIZE = 200;
+  exports.PAGINATION_DEFAULT_SIZE = 200;
+  exports.PAGINATION_MAX_OFFSET = 800;
+  exports.PAGINATION_DEFAULT_OFFSET = 0;
+});
+var lang = createCommonjsModule(function(module, exports) {
+  Object.defineProperty(exports, \\"__esModule\\", {value: true});
+  exports.compact = void 0;
+  function notEmpty(value) {
+    return value !== null && value !== void 0;
+  }
+  function compact(arr) {
+    return arr.filter(notEmpty);
+  }
+  exports.compact = compact;
+});
+var query = createCommonjsModule(function(module, exports) {
+  var __awaiter = commonjsGlobal && commonjsGlobal.__awaiter || function(thisArg, _arguments, P, generator) {
+    function adopt(value) {
+      return value instanceof P ? value : new P(function(resolve) {
+        resolve(value);
+      });
+    }
+    return new (P || (P = Promise))(function(resolve, reject) {
+      function fulfilled(value) {
+        try {
+          step(generator.next(value));
+        } catch (e) {
+          reject(e);
+        }
+      }
+      function rejected(value) {
+        try {
+          step(generator[\\"throw\\"](value));
+        } catch (e) {
+          reject(e);
+        }
+      }
+      function step(result) {
+        result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+      }
+      step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+  };
+  var __classPrivateFieldSet = commonjsGlobal && commonjsGlobal.__classPrivateFieldSet || function(receiver, state, value, kind, f) {
+    if (kind === \\"m\\")
+      throw new TypeError(\\"Private method is not writable\\");
+    if (kind === \\"a\\" && !f)
+      throw new TypeError(\\"Private accessor was defined without a setter\\");
+    if (typeof state === \\"function\\" ? receiver !== state || !f : !state.has(receiver))
+      throw new TypeError(\\"Cannot write private member to an object whose class did not declare it\\");
+    return kind === \\"a\\" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value), value;
+  };
+  var __classPrivateFieldGet = commonjsGlobal && commonjsGlobal.__classPrivateFieldGet || function(receiver, state, kind, f) {
+    if (kind === \\"a\\" && !f)
+      throw new TypeError(\\"Private accessor was defined without a getter\\");
+    if (typeof state === \\"function\\" ? receiver !== state || !f : !state.has(receiver))
+      throw new TypeError(\\"Cannot read private member from an object whose class did not declare it\\");
+    return kind === \\"m\\" ? f : kind === \\"a\\" ? f.call(receiver) : f ? f.value : state.get(receiver);
+  };
+  var __asyncValues = commonjsGlobal && commonjsGlobal.__asyncValues || function(o) {
+    if (!Symbol.asyncIterator)
+      throw new TypeError(\\"Symbol.asyncIterator is not defined.\\");
+    var m = o[Symbol.asyncIterator], i;
+    return m ? m.call(o) : (o = typeof __values === \\"function\\" ? __values(o) : o[Symbol.iterator](), i = {}, verb(\\"next\\"), verb(\\"throw\\"), verb(\\"return\\"), i[Symbol.asyncIterator] = function() {
+      return this;
+    }, i);
+    function verb(n) {
+      i[n] = o[n] && function(v) {
+        return new Promise(function(resolve, reject) {
+          v = o[n](v), settle(resolve, reject, v.done, v.value);
+        });
+      };
+    }
+    function settle(resolve, reject, d, v) {
+      Promise.resolve(v).then(function(v2) {
+        resolve({value: v2, done: d});
+      }, reject);
+    }
+  };
+  var __await = commonjsGlobal && commonjsGlobal.__await || function(v) {
+    return this instanceof __await ? (this.v = v, this) : new __await(v);
+  };
+  var __asyncGenerator = commonjsGlobal && commonjsGlobal.__asyncGenerator || function(thisArg, _arguments, generator) {
+    if (!Symbol.asyncIterator)
+      throw new TypeError(\\"Symbol.asyncIterator is not defined.\\");
+    var g = generator.apply(thisArg, _arguments || []), i, q = [];
+    return i = {}, verb(\\"next\\"), verb(\\"throw\\"), verb(\\"return\\"), i[Symbol.asyncIterator] = function() {
+      return this;
+    }, i;
+    function verb(n) {
+      if (g[n])
+        i[n] = function(v) {
+          return new Promise(function(a, b) {
+            q.push([n, v, a, b]) > 1 || resume(n, v);
+          });
+        };
+    }
+    function resume(n, v) {
+      try {
+        step(g[n](v));
+      } catch (e) {
+        settle(q[0][3], e);
+      }
+    }
+    function step(r) {
+      r.value instanceof __await ? Promise.resolve(r.value.v).then(fulfill, reject) : settle(q[0][2], r);
+    }
+    function fulfill(value) {
+      resume(\\"next\\", value);
+    }
+    function reject(value) {
+      resume(\\"throw\\", value);
+    }
+    function settle(f, v) {
+      if (f(v), q.shift(), q.length)
+        resume(q[0][0], q[0][1]);
+    }
+  };
+  var _Query_table, _Query_repository, _Query_data;
+  Object.defineProperty(exports, \\"__esModule\\", {value: true});
+  exports.Query = void 0;
+  class Query2 {
+    constructor(repository2, table, data, parent) {
+      var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q;
+      _Query_table.set(this, void 0);
+      _Query_repository.set(this, void 0);
+      _Query_data.set(this, {filter: {}});
+      this.meta = {page: {cursor: \\"start\\", more: true}};
+      this.records = [];
+      __classPrivateFieldSet(this, _Query_table, table, \\"f\\");
+      if (repository2) {
+        __classPrivateFieldSet(this, _Query_repository, repository2, \\"f\\");
+      } else {
+        __classPrivateFieldSet(this, _Query_repository, this, \\"f\\");
+      }
+      __classPrivateFieldGet(this, _Query_data, \\"f\\").filter.$any = (_b = (_a = data.filter) === null || _a === void 0 ? void 0 : _a.$any) !== null && _b !== void 0 ? _b : (_c = parent === null || parent === void 0 ? void 0 : parent.filter) === null || _c === void 0 ? void 0 : _c.$any;
+      __classPrivateFieldGet(this, _Query_data, \\"f\\").filter.$all = (_e = (_d = data.filter) === null || _d === void 0 ? void 0 : _d.$all) !== null && _e !== void 0 ? _e : (_f = parent === null || parent === void 0 ? void 0 : parent.filter) === null || _f === void 0 ? void 0 : _f.$all;
+      __classPrivateFieldGet(this, _Query_data, \\"f\\").filter.$not = (_h = (_g = data.filter) === null || _g === void 0 ? void 0 : _g.$not) !== null && _h !== void 0 ? _h : (_j = parent === null || parent === void 0 ? void 0 : parent.filter) === null || _j === void 0 ? void 0 : _j.$not;
+      __classPrivateFieldGet(this, _Query_data, \\"f\\").filter.$none = (_l = (_k = data.filter) === null || _k === void 0 ? void 0 : _k.$none) !== null && _l !== void 0 ? _l : (_m = parent === null || parent === void 0 ? void 0 : parent.filter) === null || _m === void 0 ? void 0 : _m.$none;
+      __classPrivateFieldGet(this, _Query_data, \\"f\\").sort = (_o = data.sort) !== null && _o !== void 0 ? _o : parent === null || parent === void 0 ? void 0 : parent.sort;
+      __classPrivateFieldGet(this, _Query_data, \\"f\\").columns = (_q = (_p = data.columns) !== null && _p !== void 0 ? _p : parent === null || parent === void 0 ? void 0 : parent.columns) !== null && _q !== void 0 ? _q : [\\"*\\"];
+      this.any = this.any.bind(this);
+      this.all = this.all.bind(this);
+      this.not = this.not.bind(this);
+      this.filter = this.filter.bind(this);
+      this.sort = this.sort.bind(this);
+      this.none = this.none.bind(this);
+      Object.defineProperty(this, \\"table\\", {enumerable: false});
+      Object.defineProperty(this, \\"repository\\", {enumerable: false});
+    }
+    getQueryOptions() {
+      return __classPrivateFieldGet(this, _Query_data, \\"f\\");
+    }
+    any(...queries) {
+      const $any = queries.map((query2) => query2.getQueryOptions().filter);
+      return new Query2(__classPrivateFieldGet(this, _Query_repository, \\"f\\"), __classPrivateFieldGet(this, _Query_table, \\"f\\"), {filter: {$any}}, __classPrivateFieldGet(this, _Query_data, \\"f\\"));
+    }
+    all(...queries) {
+      const $all = queries.map((query2) => query2.getQueryOptions().filter);
+      return new Query2(__classPrivateFieldGet(this, _Query_repository, \\"f\\"), __classPrivateFieldGet(this, _Query_table, \\"f\\"), {filter: {$all}}, __classPrivateFieldGet(this, _Query_data, \\"f\\"));
+    }
+    not(...queries) {
+      const $not = queries.map((query2) => query2.getQueryOptions().filter);
+      return new Query2(__classPrivateFieldGet(this, _Query_repository, \\"f\\"), __classPrivateFieldGet(this, _Query_table, \\"f\\"), {filter: {$not}}, __classPrivateFieldGet(this, _Query_data, \\"f\\"));
+    }
+    none(...queries) {
+      const $none = queries.map((query2) => query2.getQueryOptions().filter);
+      return new Query2(__classPrivateFieldGet(this, _Query_repository, \\"f\\"), __classPrivateFieldGet(this, _Query_table, \\"f\\"), {filter: {$none}}, __classPrivateFieldGet(this, _Query_data, \\"f\\"));
+    }
+    filter(a, b) {
+      if (arguments.length === 1) {
+        const constraints = Object.entries(a).map(([column, constraint]) => ({[column]: constraint}));
+        const $all = (0, lang.compact)([__classPrivateFieldGet(this, _Query_data, \\"f\\").filter.$all].flat().concat(constraints));
+        return new Query2(__classPrivateFieldGet(this, _Query_repository, \\"f\\"), __classPrivateFieldGet(this, _Query_table, \\"f\\"), {filter: {$all}}, __classPrivateFieldGet(this, _Query_data, \\"f\\"));
+      } else {
+        const column = a;
+        const value = b;
+        const $all = (0, lang.compact)([__classPrivateFieldGet(this, _Query_data, \\"f\\").filter.$all].flat().concat({[column]: value}));
+        return new Query2(__classPrivateFieldGet(this, _Query_repository, \\"f\\"), __classPrivateFieldGet(this, _Query_table, \\"f\\"), {filter: {$all}}, __classPrivateFieldGet(this, _Query_data, \\"f\\"));
+      }
+    }
+    sort(column, direction) {
+      const sort = Object.assign(Object.assign({}, __classPrivateFieldGet(this, _Query_data, \\"f\\").sort), {[column]: direction});
+      return new Query2(__classPrivateFieldGet(this, _Query_repository, \\"f\\"), __classPrivateFieldGet(this, _Query_table, \\"f\\"), {sort}, __classPrivateFieldGet(this, _Query_data, \\"f\\"));
+    }
+    select(columns) {
+      return new Query2(__classPrivateFieldGet(this, _Query_repository, \\"f\\"), __classPrivateFieldGet(this, _Query_table, \\"f\\"), {columns}, __classPrivateFieldGet(this, _Query_data, \\"f\\"));
+    }
+    getPaginated(options = {}) {
+      return __classPrivateFieldGet(this, _Query_repository, \\"f\\").query(this, options);
+    }
+    [(_Query_table = new WeakMap(), _Query_repository = new WeakMap(), _Query_data = new WeakMap(), Symbol.asyncIterator)]() {
+      return __asyncGenerator(this, arguments, function* _a() {
+        var e_1, _b;
+        try {
+          for (var _c = __asyncValues(this.getIterator(1)), _d; _d = yield __await(_c.next()), !_d.done; ) {
+            const [record] = _d.value;
+            yield yield __await(record);
+          }
+        } catch (e_1_1) {
+          e_1 = {error: e_1_1};
+        } finally {
+          try {
+            if (_d && !_d.done && (_b = _c.return))
+              yield __await(_b.call(_c));
+          } finally {
+            if (e_1)
+              throw e_1.error;
+          }
+        }
+      });
+    }
+    getIterator(chunk, options = {}) {
+      return __asyncGenerator(this, arguments, function* getIterator_1() {
+        let offset = 0;
+        let end = false;
+        while (!end) {
+          const {records, meta} = yield __await(this.getPaginated(Object.assign(Object.assign({}, options), {page: {size: chunk, offset}})));
+          yield yield __await(records);
+          offset += chunk;
+          end = !meta.page.more;
+        }
+      });
+    }
+    getMany(options = {}) {
+      return __awaiter(this, void 0, void 0, function* () {
+        const {records} = yield this.getPaginated(options);
+        return records;
+      });
+    }
+    getAll(chunk = pagination.PAGINATION_MAX_SIZE, options = {}) {
+      var e_2, _a;
+      return __awaiter(this, void 0, void 0, function* () {
+        const results = [];
+        try {
+          for (var _b = __asyncValues(this.getIterator(chunk, options)), _c; _c = yield _b.next(), !_c.done; ) {
+            const page = _c.value;
+            results.push(...page);
+          }
+        } catch (e_2_1) {
+          e_2 = {error: e_2_1};
+        } finally {
+          try {
+            if (_c && !_c.done && (_a = _b.return))
+              yield _a.call(_b);
+          } finally {
+            if (e_2)
+              throw e_2.error;
+          }
+        }
+        return results;
+      });
+    }
+    getOne(options = {}) {
+      return __awaiter(this, void 0, void 0, function* () {
+        const records = yield this.getMany(Object.assign(Object.assign({}, options), {page: {size: 1}}));
+        return records[0] || null;
+      });
+    }
+    nextPage(size, offset) {
+      return this.firstPage(size, offset);
+    }
+    previousPage(size, offset) {
+      return this.firstPage(size, offset);
+    }
+    firstPage(size, offset) {
+      return this.getPaginated({page: {size, offset}});
+    }
+    lastPage(size, offset) {
+      return this.getPaginated({page: {size, offset, before: \\"end\\"}});
+    }
+    hasNextPage() {
+      return this.meta.page.more;
+    }
+  }
+  exports.Query = Query2;
+});
+var filters = createCommonjsModule(function(module, exports) {
+  Object.defineProperty(exports, \\"__esModule\\", {value: true});
+  exports.buildSortFilter = exports.isSortFilterObject = void 0;
+  function isSortFilterObject(filter) {
+    return typeof filter === \\"object\\" && filter.column !== void 0;
+  }
+  exports.isSortFilterObject = isSortFilterObject;
+  function buildSortFilter(filter) {
+    if (!filter)
+      return void 0;
+    const filters2 = Array.isArray(filter) ? filter : [filter];
+    return filters2.reduce((acc, item) => {
+      if (typeof item === \\"string\\") {
+        return Object.assign(Object.assign({}, acc), {[item]: \\"asc\\"});
+      } else if (isSortFilterObject(item)) {
+        return Object.assign(Object.assign({}, acc), {[item.column]: item.direction});
+      } else {
+        return acc;
+      }
+    }, {});
+  }
+  exports.buildSortFilter = buildSortFilter;
+});
+var repository = createCommonjsModule(function(module, exports) {
+  var __awaiter = commonjsGlobal && commonjsGlobal.__awaiter || function(thisArg, _arguments, P, generator) {
+    function adopt(value) {
+      return value instanceof P ? value : new P(function(resolve) {
+        resolve(value);
+      });
+    }
+    return new (P || (P = Promise))(function(resolve, reject) {
+      function fulfilled(value) {
+        try {
+          step(generator.next(value));
+        } catch (e) {
+          reject(e);
+        }
+      }
+      function rejected(value) {
+        try {
+          step(generator[\\"throw\\"](value));
+        } catch (e) {
+          reject(e);
+        }
+      }
+      function step(result) {
+        result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+      }
+      step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+  };
+  var __classPrivateFieldSet = commonjsGlobal && commonjsGlobal.__classPrivateFieldSet || function(receiver, state, value, kind, f) {
+    if (kind === \\"m\\")
+      throw new TypeError(\\"Private method is not writable\\");
+    if (kind === \\"a\\" && !f)
+      throw new TypeError(\\"Private accessor was defined without a setter\\");
+    if (typeof state === \\"function\\" ? receiver !== state || !f : !state.has(receiver))
+      throw new TypeError(\\"Cannot write private member to an object whose class did not declare it\\");
+    return kind === \\"a\\" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value), value;
+  };
+  var __classPrivateFieldGet = commonjsGlobal && commonjsGlobal.__classPrivateFieldGet || function(receiver, state, kind, f) {
+    if (kind === \\"a\\" && !f)
+      throw new TypeError(\\"Private accessor was defined without a getter\\");
+    if (typeof state === \\"function\\" ? receiver !== state || !f : !state.has(receiver))
+      throw new TypeError(\\"Cannot read private member from an object whose class did not declare it\\");
+    return kind === \\"m\\" ? f : kind === \\"a\\" ? f.call(receiver) : f ? f.value : state.get(receiver);
+  };
+  var __asyncValues = commonjsGlobal && commonjsGlobal.__asyncValues || function(o) {
+    if (!Symbol.asyncIterator)
+      throw new TypeError(\\"Symbol.asyncIterator is not defined.\\");
+    var m = o[Symbol.asyncIterator], i;
+    return m ? m.call(o) : (o = typeof __values === \\"function\\" ? __values(o) : o[Symbol.iterator](), i = {}, verb(\\"next\\"), verb(\\"throw\\"), verb(\\"return\\"), i[Symbol.asyncIterator] = function() {
+      return this;
+    }, i);
+    function verb(n) {
+      i[n] = o[n] && function(v) {
+        return new Promise(function(resolve, reject) {
+          v = o[n](v), settle(resolve, reject, v.done, v.value);
+        });
+      };
+    }
+    function settle(resolve, reject, d, v) {
+      Promise.resolve(v).then(function(v2) {
+        resolve({value: v2, done: d});
+      }, reject);
+    }
+  };
+  var _RestRepository_instances, _RestRepository_client, _RestRepository_fetch, _RestRepository_table, _RestRepository_getFetchProps, _BaseClient_links, _BaseClient_branch;
+  Object.defineProperty(exports, \\"__esModule\\", {value: true});
+  exports.BaseClient = exports.RestRespositoryFactory = exports.RestRepository = exports.Repository = void 0;
+  class Repository2 extends query.Query {
+  }
+  exports.Repository = Repository2;
+  class RestRepository2 extends Repository2 {
+    constructor(client2, table) {
+      super(null, table, {});
+      _RestRepository_instances.add(this);
+      _RestRepository_client.set(this, void 0);
+      _RestRepository_fetch.set(this, void 0);
+      _RestRepository_table.set(this, void 0);
+      __classPrivateFieldSet(this, _RestRepository_client, client2, \\"f\\");
+      __classPrivateFieldSet(this, _RestRepository_table, table, \\"f\\");
+      const fetchImpl = typeof fetch !== \\"undefined\\" ? fetch : __classPrivateFieldGet(this, _RestRepository_client, \\"f\\").options.fetch;
+      if (!fetchImpl) {
+        throw new Error(\`The \\\\\`fetch\\\\\` option passed to the Xata client is resolving to a falsy value and may not be correctly imported.\`);
+      }
+      __classPrivateFieldSet(this, _RestRepository_fetch, fetchImpl, \\"f\\");
+    }
+    create(object) {
+      return __awaiter(this, void 0, void 0, function* () {
+        const fetchProps = yield __classPrivateFieldGet(this, _RestRepository_instances, \\"m\\", _RestRepository_getFetchProps).call(this);
+        const record = transformObjectLinks(object);
+        const response = yield (0, api.insertRecord)(Object.assign({pathParams: {
+          workspace: \\"{workspaceId}\\",
+          dbBranchName: \\"{dbBranch}\\",
+          tableName: __classPrivateFieldGet(this, _RestRepository_table, \\"f\\")
+        }, body: record}, fetchProps));
+        const finalObject = yield this.read(response.id);
+        if (!finalObject) {
+          throw new Error(\\"The server failed to save the record\\");
+        }
+        return finalObject;
+      });
+    }
+    createMany(objects) {
+      return __awaiter(this, void 0, void 0, function* () {
+        const fetchProps = yield __classPrivateFieldGet(this, _RestRepository_instances, \\"m\\", _RestRepository_getFetchProps).call(this);
+        const records = objects.map((object) => transformObjectLinks(object));
+        const response = yield (0, api.bulkInsertTableRecords)(Object.assign({pathParams: {workspace: \\"{workspaceId}\\", dbBranchName: \\"{dbBranch}\\", tableName: __classPrivateFieldGet(this, _RestRepository_table, \\"f\\")}, body: {records}}, fetchProps));
+        const finalObjects = yield this.any(...response.recordIDs.map((id) => this.filter(\\"id\\", id))).getAll();
+        if (finalObjects.length !== objects.length) {
+          throw new Error(\\"The server failed to save some records\\");
+        }
+        return finalObjects;
+      });
+    }
+    read(recordId) {
+      return __awaiter(this, void 0, void 0, function* () {
+        const fetchProps = yield __classPrivateFieldGet(this, _RestRepository_instances, \\"m\\", _RestRepository_getFetchProps).call(this);
+        const response = yield (0, api.getRecord)(Object.assign({pathParams: {workspace: \\"{workspaceId}\\", dbBranchName: \\"{dbBranch}\\", tableName: __classPrivateFieldGet(this, _RestRepository_table, \\"f\\"), recordId}}, fetchProps));
+        return __classPrivateFieldGet(this, _RestRepository_client, \\"f\\").initObject(__classPrivateFieldGet(this, _RestRepository_table, \\"f\\"), response);
+      });
+    }
+    update(recordId, object) {
+      return __awaiter(this, void 0, void 0, function* () {
+        const fetchProps = yield __classPrivateFieldGet(this, _RestRepository_instances, \\"m\\", _RestRepository_getFetchProps).call(this);
+        const response = yield (0, api.updateRecordWithID)(Object.assign({pathParams: {workspace: \\"{workspaceId}\\", dbBranchName: \\"{dbBranch}\\", tableName: __classPrivateFieldGet(this, _RestRepository_table, \\"f\\"), recordId}, body: object}, fetchProps));
+        const item = yield this.read(response.id);
+        if (!item)
+          throw new Error(\\"The server failed to save the record\\");
+        return item;
+      });
+    }
+    insert(recordId, object) {
+      return __awaiter(this, void 0, void 0, function* () {
+        const fetchProps = yield __classPrivateFieldGet(this, _RestRepository_instances, \\"m\\", _RestRepository_getFetchProps).call(this);
+        const record = transformObjectLinks(object);
+        const response = yield (0, api.insertRecordWithID)(Object.assign({pathParams: {
+          workspace: \\"{workspaceId}\\",
+          dbBranchName: \\"{dbBranch}\\",
+          tableName: __classPrivateFieldGet(this, _RestRepository_table, \\"f\\"),
+          recordId
+        }, body: record}, fetchProps));
+        const finalObject = yield this.read(response.id);
+        if (!finalObject) {
+          throw new Error(\\"The server failed to save the record\\");
+        }
+        return finalObject;
+      });
+    }
+    updateOrInsert(recordId, object) {
+      return __awaiter(this, void 0, void 0, function* () {
+        const fetchProps = yield __classPrivateFieldGet(this, _RestRepository_instances, \\"m\\", _RestRepository_getFetchProps).call(this);
+        const response = yield (0, api.upsertRecordWithID)(Object.assign({pathParams: {workspace: \\"{workspaceId}\\", dbBranchName: \\"{dbBranch}\\", tableName: __classPrivateFieldGet(this, _RestRepository_table, \\"f\\"), recordId}, body: object}, fetchProps));
+        const item = yield this.read(response.id);
+        if (!item)
+          throw new Error(\\"The server failed to save the record\\");
+        return item;
+      });
+    }
+    delete(recordId) {
+      return __awaiter(this, void 0, void 0, function* () {
+        const fetchProps = yield __classPrivateFieldGet(this, _RestRepository_instances, \\"m\\", _RestRepository_getFetchProps).call(this);
+        yield (0, api.deleteRecord)(Object.assign({pathParams: {workspace: \\"{workspaceId}\\", dbBranchName: \\"{dbBranch}\\", tableName: __classPrivateFieldGet(this, _RestRepository_table, \\"f\\"), recordId}}, fetchProps));
+      });
+    }
+    query(query2, options = {}) {
+      var _a, _b, _c;
+      return __awaiter(this, void 0, void 0, function* () {
+        const data = query2.getQueryOptions();
+        const body = {
+          filter: Object.values(data.filter).some(Boolean) ? data.filter : void 0,
+          sort: (_a = (0, filters.buildSortFilter)(options === null || options === void 0 ? void 0 : options.sort)) !== null && _a !== void 0 ? _a : data.sort,
+          page: (_b = options === null || options === void 0 ? void 0 : options.page) !== null && _b !== void 0 ? _b : data.page,
+          columns: (_c = options === null || options === void 0 ? void 0 : options.columns) !== null && _c !== void 0 ? _c : data.columns
+        };
+        const fetchProps = yield __classPrivateFieldGet(this, _RestRepository_instances, \\"m\\", _RestRepository_getFetchProps).call(this);
+        const {meta, records: objects} = yield (0, api.queryTable)(Object.assign({pathParams: {workspace: \\"{workspaceId}\\", dbBranchName: \\"{dbBranch}\\", tableName: __classPrivateFieldGet(this, _RestRepository_table, \\"f\\")}, body}, fetchProps));
+        const records = objects.map((record) => __classPrivateFieldGet(this, _RestRepository_client, \\"f\\").initObject(__classPrivateFieldGet(this, _RestRepository_table, \\"f\\"), record));
+        return new pagination.Page(query2, meta, records);
+      });
+    }
+  }
+  exports.RestRepository = RestRepository2;
+  _RestRepository_client = new WeakMap(), _RestRepository_fetch = new WeakMap(), _RestRepository_table = new WeakMap(), _RestRepository_instances = new WeakSet(), _RestRepository_getFetchProps = function _RestRepository_getFetchProps2() {
+    return __awaiter(this, void 0, void 0, function* () {
+      const branch = yield __classPrivateFieldGet(this, _RestRepository_client, \\"f\\").getBranch();
+      return {
+        fetchImpl: __classPrivateFieldGet(this, _RestRepository_fetch, \\"f\\"),
+        apiKey: __classPrivateFieldGet(this, _RestRepository_client, \\"f\\").options.apiKey,
+        apiUrl: \\"\\",
+        workspacesApiUrl: (path, params) => {
+          var _a, _b;
+          const baseUrl = (_a = __classPrivateFieldGet(this, _RestRepository_client, \\"f\\").options.databaseURL) !== null && _a !== void 0 ? _a : \\"\\";
+          const hasBranch = (_b = params.dbBranchName) !== null && _b !== void 0 ? _b : params.branch;
+          const newPath = path.replace(/^\\\\/db\\\\/[^/]+/, hasBranch ? \`:\${branch}\` : \\"\\");
+          return baseUrl + newPath;
+        }
+      };
+    });
+  };
+  class RestRespositoryFactory2 {
+    createRepository(client2, table) {
+      return new RestRepository2(client2, table);
+    }
+  }
+  exports.RestRespositoryFactory = RestRespositoryFactory2;
+  class BaseClient2 {
+    constructor(options, links = {}) {
+      _BaseClient_links.set(this, void 0);
+      _BaseClient_branch.set(this, void 0);
+      if (!options.databaseURL || !options.apiKey || !options.branch) {
+        throw new Error(\\"Options databaseURL, apiKey and branch are required\\");
+      }
+      this.options = options;
+      __classPrivateFieldSet(this, _BaseClient_links, links, \\"f\\");
+      const factory = options.repositoryFactory || new RestRespositoryFactory2();
+      this.db = new Proxy({}, {
+        get: (_target, prop) => {
+          if (typeof prop !== \\"string\\")
+            throw new Error(\\"Invalid table name\\");
+          return factory.createRepository(this, prop);
+        }
+      });
+    }
+    initObject(table, object) {
+      const o = {};
+      Object.assign(o, object);
+      const tableLinks = __classPrivateFieldGet(this, _BaseClient_links, \\"f\\")[table] || [];
+      for (const link of tableLinks) {
+        const [field, linkTable] = link;
+        const value = o[field];
+        if (value && typeof value === \\"object\\") {
+          const {id} = value;
+          if (Object.keys(value).find((col) => col === \\"id\\")) {
+            o[field] = this.initObject(linkTable, value);
+          } else if (id) {
+            o[field] = {
+              id,
+              get: () => {
+                this.db[linkTable].read(id);
+              }
+            };
+          }
+        }
+      }
+      const db = this.db;
+      o.read = function() {
+        return db[table].read(o[\\"id\\"]);
+      };
+      o.update = function(data) {
+        return db[table].update(o[\\"id\\"], data);
+      };
+      o.delete = function() {
+        return db[table].delete(o[\\"id\\"]);
+      };
+      for (const prop of [\\"read\\", \\"update\\", \\"delete\\"]) {
+        Object.defineProperty(o, prop, {enumerable: false});
+      }
+      Object.freeze(o);
+      return o;
+    }
+    getBranch() {
+      var e_1, _a;
+      return __awaiter(this, void 0, void 0, function* () {
+        if (__classPrivateFieldGet(this, _BaseClient_branch, \\"f\\"))
+          return __classPrivateFieldGet(this, _BaseClient_branch, \\"f\\");
+        const {branch: param} = this.options;
+        const strategies = Array.isArray(param) ? [...param] : [param];
+        const evaluateBranch = (strategy) => __awaiter(this, void 0, void 0, function* () {
+          return isBranchStrategyBuilder(strategy) ? yield strategy() : strategy;
+        });
+        try {
+          for (var strategies_1 = __asyncValues(strategies), strategies_1_1; strategies_1_1 = yield strategies_1.next(), !strategies_1_1.done; ) {
+            const strategy = strategies_1_1.value;
+            const branch = yield evaluateBranch(strategy);
+            if (branch) {
+              __classPrivateFieldSet(this, _BaseClient_branch, branch, \\"f\\");
+              return branch;
+            }
+          }
+        } catch (e_1_1) {
+          e_1 = {error: e_1_1};
+        } finally {
+          try {
+            if (strategies_1_1 && !strategies_1_1.done && (_a = strategies_1.return))
+              yield _a.call(strategies_1);
+          } finally {
+            if (e_1)
+              throw e_1.error;
+          }
+        }
+        throw new Error(\\"Unable to resolve branch value\\");
+      });
+    }
+  }
+  exports.BaseClient = BaseClient2;
+  _BaseClient_links = new WeakMap(), _BaseClient_branch = new WeakMap();
+  const isBranchStrategyBuilder = (strategy) => {
+    return typeof strategy === \\"function\\";
+  };
+  const transformObjectLinks = (object) => {
+    return Object.entries(object).reduce((acc, [key, value]) => {
+      if (value && typeof value === \\"object\\" && typeof value.id === \\"string\\") {
+        return Object.assign(Object.assign({}, acc), {[key]: value.id});
+      }
+      return Object.assign(Object.assign({}, acc), {[key]: value});
+    }, {});
+  };
+});
+var schema = createCommonjsModule(function(module, exports) {
+  var __createBinding = commonjsGlobal && commonjsGlobal.__createBinding || (Object.create ? function(o, m, k, k2) {
+    if (k2 === void 0)
+      k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || (\\"get\\" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = {enumerable: true, get: function() {
+        return m[k];
+      }};
+    }
+    Object.defineProperty(o, k2, desc);
+  } : function(o, m, k, k2) {
+    if (k2 === void 0)
+      k2 = k;
+    o[k2] = m[k];
+  });
+  var __exportStar = commonjsGlobal && commonjsGlobal.__exportStar || function(m, exports2) {
+    for (var p in m)
+      if (p !== \\"default\\" && !Object.prototype.hasOwnProperty.call(exports2, p))
+        __createBinding(exports2, m, p);
+  };
+  Object.defineProperty(exports, \\"__esModule\\", {value: true});
+  exports.RestRespositoryFactory = exports.RestRepository = exports.Repository = exports.BaseClient = exports.Query = void 0;
+  __exportStar(operators, exports);
+  __exportStar(pagination, exports);
+  Object.defineProperty(exports, \\"Query\\", {enumerable: true, get: function() {
+    return query.Query;
+  }});
+  Object.defineProperty(exports, \\"BaseClient\\", {enumerable: true, get: function() {
+    return repository.BaseClient;
+  }});
+  Object.defineProperty(exports, \\"Repository\\", {enumerable: true, get: function() {
+    return repository.Repository;
+  }});
+  Object.defineProperty(exports, \\"RestRepository\\", {enumerable: true, get: function() {
+    return repository.RestRepository;
+  }});
+  Object.defineProperty(exports, \\"RestRespositoryFactory\\", {enumerable: true, get: function() {
+    return repository.RestRespositoryFactory;
+  }});
+});
+var dist = createCommonjsModule(function(module, exports) {
+  var __createBinding = commonjsGlobal && commonjsGlobal.__createBinding || (Object.create ? function(o, m, k, k2) {
+    if (k2 === void 0)
+      k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || (\\"get\\" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = {enumerable: true, get: function() {
+        return m[k];
+      }};
+    }
+    Object.defineProperty(o, k2, desc);
+  } : function(o, m, k, k2) {
+    if (k2 === void 0)
+      k2 = k;
+    o[k2] = m[k];
+  });
+  var __exportStar = commonjsGlobal && commonjsGlobal.__exportStar || function(m, exports2) {
+    for (var p in m)
+      if (p !== \\"default\\" && !Object.prototype.hasOwnProperty.call(exports2, p))
+        __createBinding(exports2, m, p);
+  };
+  Object.defineProperty(exports, \\"__esModule\\", {value: true});
+  exports.XataError = void 0;
+  class XataError2 extends Error {
+    constructor(message, status) {
+      super(message);
+      this.status = status;
+    }
+  }
+  exports.XataError = XataError2;
+  __exportStar(api, exports);
+  __exportStar(schema, exports);
+});
+var BaseClient = dist.BaseClient;
+dist.Operations;
+dist.PAGINATION_DEFAULT_OFFSET;
+dist.PAGINATION_DEFAULT_SIZE;
+dist.PAGINATION_MAX_OFFSET;
+dist.PAGINATION_MAX_SIZE;
+dist.Page;
+dist.Query;
+dist.Repository;
+dist.RestRepository;
+dist.RestRespositoryFactory;
+dist.XataApiClient;
+dist.XataError;
+dist.acceptWorkspaceMemberInvite;
+dist.addTableColumn;
+dist.bulkInsertTableRecords;
+dist.cancelWorkspaceMemberInvite;
+dist.contains;
+dist.createBranch;
+dist.createDatabase;
+dist.createTable;
+dist.createUserAPIKey;
+dist.createWorkspace;
+dist.deleteBranch;
+dist.deleteColumn;
+dist.deleteDatabase;
+dist.deleteRecord;
+dist.deleteTable;
+dist.deleteUser;
+dist.deleteUserAPIKey;
+dist.deleteWorkspace;
+dist.endsWith;
+dist.executeBranchMigrationPlan;
+dist.exists;
+dist.ge;
+dist.getBranchDetails;
+dist.getBranchList;
+dist.getBranchMetadata;
+dist.getBranchMigrationHistory;
+dist.getBranchMigrationPlan;
+dist.getBranchStats;
+dist.getColumn;
+dist.getDatabaseList;
+dist.getRecord;
+dist.getTableColumns;
+dist.getTableSchema;
+dist.getUser;
+dist.getUserAPIKeys;
+dist.getWorkspace;
+dist.getWorkspaceMembersList;
+dist.getWorkspacesList;
+dist.gt;
+dist.gte;
+dist.includes;
+dist.includesAll;
+dist.includesPattern;
+dist.includesSubstring;
+dist.insertRecord;
+dist.insertRecordWithID;
+dist.inviteWorkspaceMember;
+dist.is;
+dist.isNot;
+dist.le;
+dist.lt;
+dist.lte;
+dist.notExists;
+dist.operationsByTag;
+dist.pattern;
+dist.queryTable;
+dist.removeWorkspaceMember;
+dist.resendWorkspaceMemberInvite;
+dist.searchBranch;
+dist.setTableSchema;
+dist.startsWith;
+dist.updateBranchMetadata;
+dist.updateColumn;
+dist.updateRecordWithID;
+dist.updateTable;
+dist.updateUser;
+dist.updateWorkspace;
+dist.updateWorkspaceMemberRole;
+dist.upsertRecordWithID;",
+        "originalLength": 77254,
+        "removedExports": [
+          "default",
+          "Operations",
+          "PAGINATION_DEFAULT_OFFSET",
+          "PAGINATION_DEFAULT_SIZE",
+          "PAGINATION_MAX_OFFSET",
+          "PAGINATION_MAX_SIZE",
+          "Page",
+          "Query",
+          "Repository",
+          "RestRepository",
+          "RestRespositoryFactory",
+          "XataApiClient",
+          "XataError",
+          "acceptWorkspaceMemberInvite",
+          "addTableColumn",
+          "bulkInsertTableRecords",
+          "cancelWorkspaceMemberInvite",
+          "contains",
+          "createBranch",
+          "createDatabase",
+          "createTable",
+          "createUserAPIKey",
+          "createWorkspace",
+          "deleteBranch",
+          "deleteColumn",
+          "deleteDatabase",
+          "deleteRecord",
+          "deleteTable",
+          "deleteUser",
+          "deleteUserAPIKey",
+          "deleteWorkspace",
+          "endsWith",
+          "executeBranchMigrationPlan",
+          "exists",
+          "ge",
+          "getBranchDetails",
+          "getBranchList",
+          "getBranchMetadata",
+          "getBranchMigrationHistory",
+          "getBranchMigrationPlan",
+          "getBranchStats",
+          "getColumn",
+          "getDatabaseList",
+          "getRecord",
+          "getTableColumns",
+          "getTableSchema",
+          "getUser",
+          "getUserAPIKeys",
+          "getWorkspace",
+          "getWorkspaceMembersList",
+          "getWorkspacesList",
+          "gt",
+          "gte",
+          "includes",
+          "includesAll",
+          "includesPattern",
+          "includesSubstring",
+          "insertRecord",
+          "insertRecordWithID",
+          "inviteWorkspaceMember",
+          "is",
+          "isNot",
+          "le",
+          "lt",
+          "lte",
+          "notExists",
+          "operationsByTag",
+          "pattern",
+          "queryTable",
+          "removeWorkspaceMember",
+          "resendWorkspaceMemberInvite",
+          "searchBranch",
+          "setTableSchema",
+          "startsWith",
+          "updateBranchMetadata",
+          "updateColumn",
+          "updateRecordWithID",
+          "updateTable",
+          "updateUser",
+          "updateWorkspace",
+          "updateWorkspaceMemberRole",
+          "upsertRecordWithID",
+        ],
+        "renderedExports": [
+          "BaseClient",
+          "__moduleExports",
+        ],
+        "renderedLength": 73976,
+      },
+    },
+    "name": "index",
+    "referencedFiles": [],
+    "type": "chunk",
+  },
+]
+`;
+
+exports[`Load from remote url 1`] = `
+[
+  {
+    "code": "const message = \\"Hello world!\\";
+
+console.log(message);
+",
+    "dynamicImports": [],
+    "exports": [],
+    "facadeModuleId": "/index.js",
+    "fileName": "index.js",
+    "implicitlyLoadedBefore": [],
+    "importedBindings": {},
+    "imports": [],
+    "isDynamicEntry": false,
+    "isEntry": true,
+    "isImplicitEntry": false,
+    "map": null,
+    "modules": {
+      "/index.js": {
+        "code": "console.log(message);",
+        "originalLength": 71,
+        "removedExports": [],
+        "renderedExports": [],
+        "renderedLength": 21,
+      },
+      "http://localhost:8080/sub.js": {
+        "code": "const message = \\"Hello world!\\";",
+        "originalLength": 37,
+        "removedExports": [],
+        "renderedExports": [
+          "message",
+        ],
+        "renderedLength": 31,
+      },
+    },
+    "name": "index",
+    "referencedFiles": [],
+    "type": "chunk",
+  },
+]
+`;

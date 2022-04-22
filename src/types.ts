@@ -1,4 +1,4 @@
-export type AvailableCDNs = "skypack" | "unpkg";
+export type AvailableCDNs = "skypack";
 
 export type FetchImpl = (
     url: string,

@@ -6,36 +6,36 @@ const isUrl = (value: string) => /^(http(s){0,1}:){0,1}\/\//.test(value);
 
 const parseCDN: Record<AvailableCDNs, (key: string) => string> = {
     skypack: (key) => `https://cdn.skypack.dev/${key}`,
-    unpkg: (key) => `https://unpkg.com/${key}`,
 };
 
 function resolveDependencyUrls(key: string, options: PluginOptions): string[] {
-    console.log("Attempt", key);
-
     if (key.startsWith("/") || key.startsWith("file://") || key.startsWith(".")) return [];
 
     if (isUrl(key)) return [key];
 
-    return (
-        options.priority?.map((cdn) => {
-            if (typeof cdn === "string") return parseCDN[cdn](key);
+    const priorities = options.priority ?? ["skypack"];
 
-            return cdn(key);
-        }) ?? []
-    );
+    return priorities.map((cdn) => {
+        if (typeof cdn === "string") return parseCDN[cdn](key);
+
+        return cdn(key);
+    });
 }
 
 export async function resolveDependency(name: string, options: PluginOptions): Promise<Dependency | null> {
     const urls = resolveDependencyUrls(name, options);
     if (urls.length === 0) return null;
 
+    const { fetchImpl } = options;
+
     for await (const url of urls) {
         try {
-            const response = await options.fetchImpl(url);
+            const response = await fetchImpl(url);
             const main = await response.text();
 
-            return { name: name, url: response.url, main };
+            return { name, url: response.url, main };
         } catch (error) {
+            console.debug(`Error fetching ${name}`, error);
             continue;
         }
     }
