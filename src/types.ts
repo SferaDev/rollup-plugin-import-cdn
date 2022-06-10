@@ -12,6 +12,7 @@ export type FetchImpl = (
 export interface PluginOptions {
     fetchImpl: FetchImpl;
     priority?: Array<AvailableCDNs | ((key: string) => string)>;
+    versions?: Record<string, string>;
 }
 
 export interface Dependency {
