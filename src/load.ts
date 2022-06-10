@@ -4,8 +4,11 @@ import type { AvailableCDNs, Dependency, PluginOptions } from "./types";
 
 const isUrl = (value: string) => /^(http(s){0,1}:){0,1}\/\//.test(value);
 
-const parseCDN: Record<AvailableCDNs, (key: string) => string> = {
-    skypack: (key) => `https://cdn.skypack.dev/${key}`,
+const parseCDN: Record<AvailableCDNs, (key: string, version?: string) => string> = {
+    skypack: (key, version) => {
+        const versionTag = version ? `@${version}` : "";
+        return `https://cdn.skypack.dev/${key}${versionTag}`;
+    },
 };
 
 function resolveDependencyUrls(key: string, options: PluginOptions): string[] {
@@ -14,9 +17,10 @@ function resolveDependencyUrls(key: string, options: PluginOptions): string[] {
     if (isUrl(key)) return [key];
 
     const priorities = options.priority ?? ["skypack"];
+    const version = options.versions?.[key];
 
     return priorities.map((cdn) => {
-        if (typeof cdn === "string") return parseCDN[cdn](key);
+        if (typeof cdn === "string") return parseCDN[cdn](key, version);
 
         return cdn(key);
     });
