@@ -1,6 +1,6 @@
 {
     "name": "rollup-plugin-import-cdn",
-    "version": "0.2.1",
+    "version": "0.2.2",
     "description": "Import and transform modules from a CDN to rollup",
     "author": "SferaDev",
     "license": "ISC",

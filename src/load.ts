@@ -62,6 +62,13 @@ export async function loadHook(key: string, options: PluginOptions) {
     return imports
         .map(({ s, e }) => {
             const string = dependency.main.slice(s, e);
+
+            // We don't support dynamic imports on variables, ignore them
+            const variable = dependency.main.slice(s - 1, e + 1);
+            if (variable.startsWith("(") && variable.endsWith(")")) {
+                return undefined;
+            }
+
             return !isUrl(string) ? { string, start: s, end: e } : undefined;
         })
         .reduce((code, data) => {
